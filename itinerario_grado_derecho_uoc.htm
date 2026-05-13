@@ -1,0 +1,2829 @@
+<!doctype html>
+<html lang="es">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="vesion" content="Oscar Unzueta ver4">
+  <meta name="disclaimer" content="Esta herramienta no almacena datos en servidores externos y es ajena a la UOC.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Itinerario Grado en Derecho UOC</title>
+
+  <style>
+    :root {
+      --azul: #1d4ed8;
+      --azul-oscuro: #0f2f6f;
+      --rojo: #dc2626;
+      --naranja: #f97316;
+      --verde: #15803d;
+      --morado: #7e22ce;
+      --gris: #64748b;
+      --fondo: #f8fafc;
+      --tarjeta: #ffffff;
+      --borde: #dbe4f0;
+      --texto: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+    }
+
+    header {
+      background: linear-gradient(135deg, #061b49, #123b8f);
+      color: white;
+      padding: 24px 20px;
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.18);
+    }
+
+    .header-inner {
+      width: min(1500px, 96vw);
+      margin: auto;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      width: 270px;
+      max-width: 35vw;
+      background: white;
+      border-radius: 6px;
+      padding: 6px;
+    }
+
+    .title {
+      text-align: right;
+      flex: 1;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      opacity: 0.95;
+    }
+
+    .wrap {
+      width: min(1500px, 96vw);
+      margin: 24px auto 48px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: var(--tarjeta);
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-top: 4px;
+    }
+
+    .progress-panel,
+    .section {
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 24px;
+      padding: 18px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    .progress-panel h2,
+    .section-title {
+      margin: 0 0 16px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .progress-panel h2 {
+      color: var(--azul-oscuro);
+      font-size: 1.2rem;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+    }
+
+    .section.complete .section-title::after {
+      content: "  👑 Enhorabuena";
+      font-size: 1rem;
+      color: var(--verde);
+    }
+
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .progress-card {
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      padding: 14px;
+      background: #fbfdff;
+    }
+
+    .progress-card h3 {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      color: #334155;
+    }
+
+    .progress-card.complete h3::after {
+      content: " 🎉";
+    }
+
+    .progress-card.complete {
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18), 0 8px 24px rgba(21, 128, 61, 0.12);
+    }
+
+    .progress-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.95rem;
+      margin: 8px 0 6px;
+    }
+
+    .bar {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: var(--azul);
+      transition: width 0.25s ease;
+    }
+
+    .progress-card.mand .bar > span {
+      background: var(--rojo);
+    }
+
+    .progress-card.opt .bar > span {
+      background: var(--verde);
+    }
+
+    .progress-card.total .bar > span {
+      background: var(--morado);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 22px;
+    }
+
+    .toolbar input[type="search"] {
+      flex: 1 1 280px;
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 1rem;
+    }
+
+    .toolbar button,
+    .toggle {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .toolbar button.primary {
+      background: #dbeafe;
+      color: #1e3a8a;
+    }
+
+    .toolbar button.editing {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .optional-edit-name {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      border: 1px dashed transparent;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font: inherit;
+      font-weight: 700;
+      background: transparent;
+      color: var(--texto);
+    }
+
+    body.edit-optativas .optional-edit-name {
+      border-color: #86efac;
+      background: #f7fff9;
+    }
+
+    body:not(.edit-optativas) .optional-edit-name {
+      pointer-events: none;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(720px, 96vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid var(--borde);
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
+      padding: 18px;
+      position: relative;
+    }
+
+    .modal header {
+      background: none;
+      color: var(--texto);
+      box-shadow: none;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      color: var(--azul-oscuro);
+    }
+
+    .modal-close {
+      border: 0;
+      background: #dbeafe;
+      color: #1e3a8a;
+      border-radius: 12px;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      font-size: 0.95rem;
+    }
+
+    .summary-row strong {
+      color: var(--azul-oscuro);
+    }
+
+    .semester-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: #1e3a8a;
+      font-weight: 700;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .basic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .areas {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .area {
+      border: 2px solid var(--borde);
+      border-radius: 20px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.9));
+      min-height: 560px;
+    }
+
+    .area h3 {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .publico {
+      border-color: #93c5fd;
+    }
+
+    .publico h3 {
+      color: var(--azul);
+    }
+
+    .civil {
+      border-color: #fca5a5;
+    }
+
+    .civil h3 {
+      color: var(--rojo);
+    }
+
+    .empresa {
+      border-color: #fdba74;
+    }
+
+    .empresa h3 {
+      color: var(--naranja);
+    }
+
+    .penal {
+      border-color: #86efac;
+    }
+
+    .penal h3 {
+      color: var(--verde);
+    }
+
+    .otras {
+      border-color: #c4b5fd;
+    }
+
+    .otras h3 {
+      color: var(--morado);
+    }
+
+    .chain {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .subject {
+      position: relative;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      min-height: 58px;
+      border: 1.5px solid var(--borde);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: white;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+      user-select: none;
+    }
+
+    .subject:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    .subject input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--azul);
+      flex: 0 0 auto;
+    }
+
+    .subject span.name {
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .subject.done {
+      opacity: 0.52;
+      background: #f1f5f9;
+    }
+
+    .subject.done span.name {
+      text-decoration: line-through;
+    }
+
+    .subject.in-progress {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.10);
+    }
+
+    .subject.in-progress span.name {
+      color: var(--azul);
+    }
+
+    .subject.in-progress input[type="checkbox"] {
+      accent-color: var(--azul);
+    }
+
+    .hide-done .subject.done,
+    .hide-done .arrow.hidden-done,
+    .hide-done .optional-card.done-card {
+      display: none !important;
+    }
+
+    .subject .credits {
+      margin-left: auto;
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: white;
+      background: var(--azul);
+    }
+
+    .subject.opt .credits {
+      background: var(--verde);
+    }
+
+    .subject.tfg .credits {
+      background: var(--morado);
+    }
+
+    .arrow {
+      text-align: center;
+      color: #0f172a;
+      font-weight: 900;
+      line-height: 1;
+      margin: -2px 0;
+    }
+
+    .optional-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      width: 100%;
+    }
+
+    .optional-card {
+      display: flex;
+      min-width: 0;
+    }
+
+    .optional-card .subject {
+      width: 100%;
+      min-width: 0;
+      min-height: 120px;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: left;
+      border-color: #86efac;
+    }
+
+    .foot {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      background: white;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    body.print-pending .subject.done,
+    body.print-pending .arrow.hidden-done,
+    body.print-pending .toolbar,
+    body.print-pending .progress-panel,
+    body.print-pending .stats,
+    body.print-pending .foot,
+    body.print-pending #summaryModal {
+      display: none !important;
+    }
+
+    body.print-pending::before {
+      content: "Itinerario pendiente de aprobar";
+      display: block;
+      width: min(1500px, 96vw);
+      margin: 18px auto 0;
+      padding: 14px 18px;
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      color: var(--azul-oscuro);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
+
+      body {
+        background: white;
+        font-size: 9px;
+      }
+
+      header {
+        padding: 8px 10px;
+        box-shadow: none;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .header-inner {
+        width: 100%;
+        gap: 10px;
+      }
+
+      .logo {
+        width: 120px;
+        padding: 2px;
+      }
+
+      header h1 {
+        font-size: 22px;
+      }
+
+      header p {
+        font-size: 9px;
+        margin-top: 2px;
+      }
+
+      .wrap {
+        width: 100%;
+        margin: 6px 0 0;
+      }
+
+      body.print-pending::before {
+        width: 100%;
+        margin: 4px 0 6px;
+        padding: 4px;
+        border: 0;
+        font-size: 11px;
+      }
+
+      .section {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 3px 0;
+        margin-bottom: 4px;
+        break-inside: avoid;
+      }
+
+      .section.complete {
+        display: none !important;
+      }
+
+      .section-title {
+        font-size: 10px;
+        margin: 0 0 3px;
+        text-align: left;
+        border-bottom: 1px solid #cbd5e1;
+        padding-bottom: 2px;
+      }
+
+      .basic-grid,
+      .optional-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+      }
+
+      .areas {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+      }
+
+      .area {
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        background: white;
+        break-inside: avoid;
+      }
+
+      .area h3 {
+        font-size: 8px;
+        margin: 0 0 2px;
+        text-align: left;
+        border-bottom: 1px dotted #cbd5e1;
+        padding-bottom: 1px;
+      }
+
+      .chain {
+        gap: 1px;
+      }
+
+      .arrow {
+        display: none !important;
+      }
+
+      .subject {
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+        padding: 1px 0;
+        gap: 3px;
+        box-shadow: none !important;
+        background: white;
+        break-inside: avoid;
+      }
+
+      .subject:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      .subject input {
+        display: none;
+      }
+
+      .subject span.name {
+        font-size: 8px;
+        font-weight: 500;
+        line-height: 1.05;
+      }
+
+      .subject span.name::before {
+        content: "□ ";
+      }
+
+      .subject .credits {
+        width: auto;
+        height: auto;
+        margin-left: 2px;
+        border-radius: 0;
+        background: transparent !important;
+        color: #0f172a;
+        font-size: 7px;
+        font-weight: 700;
+      }
+
+      .subject .credits::before {
+        content: "(";
+      }
+
+      .subject .credits::after {
+        content: " cr)";
+      }
+
+      .optional-card {
+        min-height: 0;
+        break-inside: avoid;
+      }
+
+      .optional-card .subject {
+        min-height: 0;
+        align-items: flex-start;
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      .note,
+      .foot,
+      .toolbar,
+      .progress-panel,
+      .stats,
+      #summaryModal {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .areas {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .optional-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .stats,
+      .progress-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        font-size: 15px;
+      }
+
+      header {
+        padding: 16px 12px;
+      }
+
+      .header-inner {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .title {
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 2rem;
+        line-height: 1.05;
+      }
+
+      header p {
+        font-size: 0.95rem;
+        line-height: 1.25;
+      }
+
+      .logo {
+        width: 210px;
+        max-width: 82vw;
+      }
+
+      .wrap {
+        width: 94vw;
+        margin-top: 14px;
+      }
+
+      .stats,
+      .progress-grid,
+      .areas,
+      .foot {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat {
+        padding: 10px 12px;
+        border-radius: 14px;
+      }
+
+      .stat strong {
+        font-size: 1.05rem;
+      }
+
+      .progress-panel,
+      .section {
+        padding: 12px;
+        border-radius: 18px;
+        margin-bottom: 14px;
+      }
+
+      .progress-grid {
+        gap: 10px;
+      }
+
+      .progress-card {
+        padding: 11px;
+        border-radius: 14px;
+      }
+
+      .progress-card h3 {
+        font-size: 0.85rem;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px;
+        border-radius: 16px;
+        gap: 8px;
+      }
+
+      .toolbar input[type="search"],
+      .toolbar button,
+      .toggle {
+        width: 100%;
+        flex: none;
+        justify-content: center;
+        font-size: 0.95rem;
+      }
+
+      .section-title {
+        font-size: 1.05rem;
+        line-height: 1.25;
+        margin-bottom: 12px;
+      }
+
+      .basic-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .optional-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .area {
+        min-height: auto;
+        padding: 10px;
+        border-radius: 16px;
+      }
+
+      .area h3 {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+      }
+
+      .chain {
+        gap: 7px;
+      }
+
+      .arrow {
+        font-size: 0.8rem;
+        margin: -3px 0;
+      }
+
+      .subject {
+        min-height: 48px;
+        padding: 9px 10px;
+        border-radius: 12px;
+        gap: 8px;
+      }
+
+      .subject span.name {
+        font-size: 0.92rem;
+      }
+
+      .subject input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+      }
+
+      .subject .credits {
+        width: 25px;
+        height: 25px;
+        font-size: 0.78rem;
+      }
+
+      .optional-card {
+        min-height: auto;
+      }
+
+      .optional-card .subject {
+        min-height: 82px;
+        padding: 8px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      .modal {
+        width: 94vw;
+        max-height: 88vh;
+        padding: 14px;
+        border-radius: 18px;
+      }
+
+      .modal header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 0;
+        margin-bottom: 4px;
+      }
+
+      .modal h2 {
+        font-size: 1rem;
+        line-height: 1.2;
+      }
+
+      .summary-row {
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px 10px;
+        font-size: 0.88rem;
+      }
+
+      .modal-close {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+      }
+
+      .semester-box {
+        font-size: 0.85rem;
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      header h1 {
+        font-size: 1.65rem;
+      }
+
+      .optional-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .subject span.name {
+        font-size: 0.88rem;
+      }
+    }
+
+    .optional-selector-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .optional-selector-box select {
+      width: 100%;
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: white;
+    }
+
+    .selector-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      color: #166534;
+      font-weight: 800;
+    }
+
+    .selector-info, .selector-warning, .mention-ok {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .selector-info {
+      background: #eff6ff;
+      color: #1e3a8a;
+      border: 1px solid #bfdbfe;
+    }
+
+    .selector-warning {
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
+    }
+
+    .mention-ok {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+      margin-bottom: 10px;
+    }
+
+    .req-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.08);
+    }
+
+    .req-dot.verde { background: #22c55e; }
+    .req-dot.amarillo { background: #facc15; }
+    .req-dot.rojo { background: #ef4444; }
+
+    .grade-input {
+      width: 52px;
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      padding: 6px 5px;
+      font-size: 0.82rem;
+      background: #fff;
+    }
+
+    .remove-optativa {
+      border: 0;
+      border-radius: 10px;
+      padding: 7px 9px;
+      background: #e2e8f0;
+      color: #0f172a;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .empty-optativas {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: #64748b;
+      font-weight: 700;
+      text-align: center;
+      padding: 18px;
+      border: 1px dashed var(--borde);
+      border-radius: 14px;
+      background: #f8fafc;
+    }
+
+
+    /* Ajustes de visualización para optativas y notas */
+    .subject .name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .subject .grade-input {
+      flex: 0 0 auto;
+    }
+
+    .optional-grid {
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      align-items: stretch;
+    }
+
+    .optional-card .subject {
+      display: grid;
+      grid-template-columns: 14px 20px minmax(0, 1fr) 30px 44px;
+      grid-template-rows: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 118px;
+      width: 100%;
+      padding: 12px;
+    }
+
+    .optional-card .subject .req-dot {
+      grid-column: 1;
+    }
+
+    .optional-card .subject input[type="checkbox"] {
+      grid-column: 2;
+      width: 18px;
+      height: 18px;
+    }
+
+    .optional-card .subject .name {
+      grid-column: 3;
+      line-height: 1.15;
+    }
+
+    .optional-card .subject .credits {
+      grid-column: 4;
+      margin-left: 0;
+      width: 28px;
+      height: 28px;
+    }
+
+    .optional-card .subject .grade-input {
+      grid-column: 5;
+      width: 42px;
+      min-width: 42px;
+      padding: 5px 3px;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .optional-card .subject .remove-optativa {
+      grid-column: 1 / -1;
+      width: 100%;
+      justify-self: stretch;
+      padding: 7px 8px;
+      margin-top: 2px;
+    }
+
+    .semester-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.95rem;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .semester-table th,
+    .semester-table td {
+      border: 1px solid var(--borde);
+      padding: 9px 10px;
+      text-align: center;
+    }
+
+    .semester-table th {
+      background: #eff6ff;
+      color: #1e3a8a;
+    }
+
+    @media (max-width: 720px) {
+      .optional-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .optional-card .subject {
+        grid-template-columns: 14px 22px minmax(0, 1fr) 28px 42px;
+        min-height: 104px;
+      }
+    }
+
+
+    /* Mejoras v3: tarjetas más compactas en escritorio, notas pequeñas y página de aprobadas para PDF */
+    @media (min-width: 721px) {
+      .basic-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .basic-grid .subject {
+        min-height: 66px;
+        display: grid;
+        grid-template-columns: 14px 20px minmax(0, 1fr) 58px;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .basic-grid .subject .req-dot { grid-column: 1; }
+      .basic-grid .subject input[type="checkbox"] { grid-column: 2; }
+      .basic-grid .subject .name { grid-column: 3; font-size: 0.96rem; }
+      .basic-grid .subject .grade-input { grid-column: 4; }
+    }
+
+    .subject .grade-input {
+      width: 52px;
+      min-width: 52px;
+      padding: 5px 4px;
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .subject .grade-input::placeholder {
+      font-size: 0.76rem;
+    }
+
+    .optional-grid {
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+
+    .optional-card .subject {
+      grid-template-columns: 14px 20px minmax(0, 1fr) 30px 52px;
+      min-height: 132px;
+    }
+
+    .optional-card .subject .grade-input {
+      width: 50px;
+      min-width: 50px;
+      font-size: 0.76rem;
+    }
+
+    .remove-optativa {
+      min-height: 34px;
+      white-space: nowrap;
+    }
+
+    #selectorOptativas option[data-destacada="1"] {
+      font-weight: 800;
+    }
+
+    #selectorOptativas optgroup[data-color="publico"] { color: #1d4ed8; }
+    #selectorOptativas optgroup[data-color="empresa"] { color: #c2410c; }
+    #selectorOptativas optgroup[data-color="patrimonial"] { color: #dc2626; }
+    #selectorOptativas optgroup[data-color="teoria"] { color: #7e22ce; }
+    #selectorOptativas optgroup[data-color="minor"] { color: #15803d; }
+
+    .print-approved-page {
+      display: none;
+    }
+
+    .print-approved-title {
+      margin: 0 0 10px;
+      color: var(--azul-oscuro);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    .print-approved-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .print-approved-table th,
+    .print-approved-table td {
+      border: 1px solid #cbd5e1;
+      padding: 5px 6px;
+      text-align: left;
+    }
+
+    .print-approved-table th {
+      background: #eff6ff;
+      color: #1e3a8a;
+    }
+
+    @media print {
+      body.print-pending #printApprovedPage {
+        display: block !important;
+        page-break-before: always;
+        break-before: page;
+        padding-top: 8px;
+      }
+    }
+
+
+    /* Ajustes v4: selector y botones en PDF, botón quitar compacto en web */
+    .remove-optativa {
+      min-height: 24px !important;
+      padding: 4px 7px !important;
+      font-size: 0.72rem !important;
+      line-height: 1 !important;
+      border-radius: 8px !important;
+    }
+
+    .optional-card .subject .remove-optativa {
+      width: auto !important;
+      justify-self: end !important;
+      grid-column: 1 / -1 !important;
+      margin-top: 0 !important;
+    }
+
+    @media print {
+      .optional-selector-box,
+      .remove-optativa,
+      .optional-card .subject .remove-optativa {
+        display: none !important;
+      }
+
+      .optional-grid {
+        margin-top: 0 !important;
+      }
+    }
+
+
+    /* Ajustes v5: icono créditos más pequeño, botón info y modal aprobadas/plan docente */
+    .subject .credits {
+      width: 23px !important;
+      height: 23px !important;
+      font-size: 0.72rem !important;
+      flex: 0 0 23px !important;
+    }
+
+    .info-subject {
+      border: 0;
+      border-radius: 999px;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #dbeafe;
+      color: #1e3a8a;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 0;
+      font-size: 0.82rem;
+      line-height: 1;
+    }
+    .modal-wide { width: min(860px, 96vw); }
+    .plan-box { display: grid; gap: 12px; margin-top: 14px; }
+    .plan-box h3 { margin: 0; color: var(--azul-oscuro); }
+    .plan-pill { display: inline-flex; width: fit-content; border-radius: 999px; background: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; padding: 6px 10px; font-weight: 800; }
+    .plan-box ul { margin: 6px 0 0; padding-left: 22px; }
+    .approved-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.95rem; }
+    .approved-table th, .approved-table td { border: 1px solid var(--borde); padding: 9px 10px; text-align: left; }
+    .approved-table th { background: #eff6ff; color: #1e3a8a; }
+    .approved-table tfoot td { font-weight: 900; background: #f8fafc; }
+    .credit-spacer { pointer-events: none; }
+
+    @media (min-width: 721px) {
+      .basic-grid .subject { grid-template-columns: 14px 20px minmax(0, 1fr) 24px 52px; }
+      .basic-grid .subject .info-subject { grid-column: 4; }
+      .basic-grid .subject .grade-input { grid-column: 5; }
+    }
+
+    .optional-card .subject { grid-template-columns: 14px 20px minmax(0, 1fr) 23px 24px 50px !important; }
+    .optional-card .subject .credits { grid-column: 4 !important; }
+    .optional-card .subject .info-subject { grid-column: 5 !important; }
+    .optional-card .subject .grade-input { grid-column: 6 !important; }
+
+    @media (max-width: 720px) {
+      #selectorOptativas option[data-color="publico"] { background: #eff6ff; color: #1d4ed8; }
+      #selectorOptativas option[data-color="empresa"] { background: #fff7ed; color: #c2410c; }
+      #selectorOptativas option[data-color="patrimonial"] { background: #fef2f2; color: #dc2626; }
+      #selectorOptativas option[data-color="teoria"] { background: #faf5ff; color: #7e22ce; }
+      #selectorOptativas option[data-color="minor"] { background: #f0fdf4; color: #15803d; }
+      .subject .credits { width: 22px !important; height: 22px !important; font-size: 0.68rem !important; flex-basis: 22px !important; }
+      .info-subject { width: 23px; height: 23px; min-width: 23px; }
+      .optional-card .subject { grid-template-columns: 14px 22px minmax(0, 1fr) 22px 23px 44px !important; }
+    }
+
+    @media print { #approvedModal, #planModal { display: none !important; } }
+
+    /* Ajustes visuales v6: obligatorias legibles, ámbitos visibles y colores en selector móvil */
+    @media (min-width: 721px) {
+      .area .subject {
+        display: grid;
+        grid-template-columns: 14px 20px minmax(0, 1fr) 24px 52px;
+        grid-template-rows: auto auto;
+        align-items: center;
+        gap: 7px 8px;
+        min-height: 86px;
+        padding: 11px 12px;
+      }
+
+      .area .subject .name {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        font-size: 0.98rem;
+        line-height: 1.18;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: auto;
+      }
+
+      .area .subject .req-dot { grid-column: 1; grid-row: 2; }
+      .area .subject input[type="checkbox"] { grid-column: 2; grid-row: 2; }
+      .area .subject .credits { grid-column: 3; grid-row: 2; justify-self: end; margin-left: 0; }
+      .area .subject .info-subject { grid-column: 4; grid-row: 2; }
+      .area .subject .grade-input { grid-column: 5; grid-row: 2; }
+    }
+
+    .optional-ambitos {
+      grid-column: 1 / -1;
+      display: block;
+      margin-top: -2px;
+      color: #475569;
+      font-size: 0.72rem;
+      line-height: 1.15;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .optional-card .subject .optional-ambitos {
+      grid-column: 1 / -1 !important;
+    }
+
+    @media (max-width: 720px) {
+      #selectorOptativas optgroup[data-color="publico"] { background: #eff6ff; color: #1d4ed8; }
+      #selectorOptativas optgroup[data-color="empresa"] { background: #fff7ed; color: #c2410c; }
+      #selectorOptativas optgroup[data-color="patrimonial"] { background: #fef2f2; color: #dc2626; }
+      #selectorOptativas optgroup[data-color="teoria"] { background: #faf5ff; color: #7e22ce; }
+      #selectorOptativas optgroup[data-color="minor"] { background: #f0fdf4; color: #15803d; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <img
+        class="logo"
+        alt="Universitat Oberta de Catalunya"
+        src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_blau_uoc.png"
+      >
+      <div class="title">
+        <h1>Grado en Derecho UOC</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="stats">
+      <div class="stat">Formación básica <strong>60 créditos</strong></div>
+      <div class="stat">Obligatorias <strong>146 créditos</strong></div>
+      <div class="stat">Optativas <strong>28 créditos</strong></div>
+      <div class="stat">TFG <strong>6 créditos</strong></div>
+      <div class="stat">Total <strong>240 créditos</strong></div>
+    </section>
+
+    <section class="progress-panel">
+      <h2>Progreso aprobado</h2>
+      <div class="progress-grid" id="progressGrid"></div>
+    </section>
+
+    <div id="mencionesBox"></div>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Buscar asignatura...">
+
+      <label class="toggle">
+        <input id="hideDone" type="checkbox">
+        Ocultar aprobadas
+      </label>
+
+      <button id="summaryBtn" class="primary">Ver lo que falta</button>
+
+      <button id="approvedBtn" class="primary">Ver aprobadas </button>
+
+     
+
+      <button id="pdfBtn" class="primary">PDF</button>
+    </div>
+
+    <div id="summaryModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="summaryTitle">
+      <div class="modal">
+        <header>
+          <h2 id="summaryTitle">Resumen pendiente</h2>
+          <button id="closeSummary" class="modal-close" aria-label="Cerrar">✕</button>
+        </header>
+        <div id="summaryContent"></div>
+      </div>
+    </div>
+
+    <div id="approvedModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="approvedTitle">
+      <div class="modal modal-wide">
+        <header>
+          <h2 id="approvedTitle">Asignaturas aprobadas con nota</h2>
+          <button id="closeApproved" class="modal-close" aria-label="Cerrar">✕</button>
+        </header>
+        <div id="approvedContent"></div>
+      </div>
+    </div>
+
+    <div id="planModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="planTitle">
+      <div class="modal modal-wide">
+        <header>
+          <h2 id="planTitle">Información de la asignatura</h2>
+          <button id="closePlan" class="modal-close" aria-label="Cerrar">✕</button>
+        </header>
+        <div id="planContent"></div>
+      </div>
+    </div>
+
+    <section class="section" data-section="basic">
+      <h2 class="section-title" style="color: var(--azul);">Formación básica · 60 créditos</h2>
+      <div class="basic-grid" id="basic"></div>
+    </section>
+
+    <section class="section" data-section="mandatory">
+      <h2 class="section-title" style="color: var(--rojo);">Obligatorias · 146 créditos</h2>
+      <div class="areas" id="mandatory"></div>
+    </section>
+
+    <section class="section" data-section="optional">
+      <h2 class="section-title" style="color: var(--verde);">Optativas  · 28 créditos</h2>
+      <div class="optional-selector-box">
+        <div class="selector-meta">
+          <span>Elige hasta 7 optativas desde el listado</span>
+          <span id="contadorOptativas">0/7 optativas elegidas</span>
+        </div>
+        <select id="selectorOptativas">
+          <option value="">Selecciona una optativa...</option>
+        </select>
+        <div id="ambitoMayoritatio" class="selector-info" hidden></div>
+        <div id="avisoSemestre" class="selector-warning" hidden></div>
+      </div>
+      <div class="optional-grid" id="optional"></div>
+    </section>
+
+    <section class="section" data-section="final">
+      <h2 class="section-title" style="color: var(--morado);">Trabajo final de grado   6 créditos</h2>
+      <div class="basic-grid" id="final"></div>
+    </section>
+
+    <div class="foot">
+      <div class="note"><strong>Tip:</strong> 1 clic = asignatura en curso; 2 clics = asignatura aprobada; 3 clics = vuelve al estado inicial.</div>
+      <div class="note"><strong>Guardado:</strong> el progreso se conserva automáticamente en este navegador, no se almacenan datos en servidores externos.</div>
+	  <div class="note"><strong>Advertencia:</strong> Esta app no pertenece a la UOC.</div>
+    </div>
+  </main>
+
+  <section id="printApprovedPage" class="print-approved-page" aria-hidden="true"></section>
+
+  <script>
+    "use strict";
+
+    const STORAGE_KEY = "itinerario-derecho-aprobadas-v5";
+    const IN_PROGRESS_KEY = "itinerario-derecho-en-curso-v1";
+    const HIDE_KEY = "itinerario-derecho-ocultar-v1";
+    const OPTATIVAS_KEY = "itinerario-derecho-optativas-seleccionadas-v2";
+    const NOTAS_KEY = "itinerario-derecho-notas-v1";
+    const MAX_OPTATIVAS = 7;
+
+    const PLAN_DOCENTE = [
+      {
+            "asignatura": "Uso y aplicación de las TIC",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Búsqueda, selección y organización de la información",
+                  "Creación de contenidos digitales",
+                  "Comunicación y colaboración",
+                  "Autonomía y resolución de problemas",
+                  "Seguridad, bienestar y civismo"
+            ]
+      },
+      {
+            "asignatura": "Técnicas de expresión, argumentación y negociación",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Expresión",
+                  "Argumentación",
+                  "Negociación",
+                  "Las relaciones entre negociación y argumentación",
+                  "Negociación. Modelos integrativos"
+            ]
+      },
+      {
+            "asignatura": "Introducción a la economía",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "El funcionamiento del mercado: la demanda y la oferta",
+                  "La empresa y las estructuras de mercado",
+                  "Objetivos macroeconómicos",
+                  "Políticas macroeconómicas",
+                  "Las relaciones económicas internacionales"
+            ]
+      },
+      {
+            "asignatura": "Política y sociedad",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Sociedad, política y poder",
+                  "La organización de la política",
+                  "La política estatal: elementos, instituciones y formas de gobierno",
+                  "La política como actividad (I): el contexto cultural",
+                  "La política como actividad (II): los actores",
+                  "La política como actividad (III): los resultados",
+                  "Retos y transformaciones actuales del estado"
+            ]
+      },
+      {
+            "asignatura": "Fundamentos históricos del derecho",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "El derecho del mundo mediterráneo. De la antigüedad a Europa",
+                  "La Europa medieval (s. IX-XV)",
+                  "La creación del derecho y la ciencia jurídica en la época moderna"
+            ]
+      },
+      {
+            "asignatura": "Sistema constitucional español",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "El Estado, la constitución y el constitucionalismo",
+                  "La Constitución española y las otras fuentes del derecho",
+                  "Las decisiones fundamentales del constituyente"
+            ]
+      },
+      {
+            "asignatura": "Derecho civil I",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "El ordenamiento jurídico civil",
+                  "Derecho de la persona",
+                  "El patrimonio",
+                  "Autonomía de la voluntad y representación"
+            ]
+      },
+      {
+            "asignatura": "Derecho civil II",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Introducción al Derecho patrimonial",
+                  "La relación obligatoria",
+                  "Cumplimiento e incumplimiento",
+                  "Teoría general del contrato",
+                  "Tipos de contratos"
+            ]
+      },
+      {
+            "asignatura": "Derecho civil III",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "El derecho real",
+                  "La posesión",
+                  "Derecho de propiedad",
+                  "Registro de la propiedad",
+                  "Derechos reales de garantía"
+            ]
+      },
+      {
+            "asignatura": "Derecho civil IV",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Derecho de familia",
+                  "El matrimonio",
+                  "Filiación",
+                  "Sucesión testamentaria",
+                  "Partición"
+            ]
+      },
+      {
+            "asignatura": "Derecho financiero y tributario I",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Principios y normas tributarias",
+                  "Ingresos y gastos públicos",
+                  "Elementos del tributo",
+                  "Procedimientos tributarios"
+            ]
+      },
+      {
+            "asignatura": "Derecho financiero y tributario II",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Fiscalidad directa",
+                  "Fiscalidad indirecta",
+                  "Fiscalidad autonómica y local",
+                  "Imposición sobre el tráfico"
+            ]
+      },
+      {
+            "asignatura": "Derecho mercantil I",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Concepto y sujetos en el derecho mercantil",
+                  "Institucionalización del mercado",
+                  "Títulos valores",
+                  "Contratación mercantil"
+            ]
+      },
+      {
+            "asignatura": "Derecho mercantil II",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Sociedades mercantiles",
+                  "Órganos sociales",
+                  "Cuentas anuales",
+                  "Derecho concursal"
+            ]
+      },
+      {
+            "asignatura": "Derecho de internet",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Servicios de la sociedad de la información",
+                  "Protección de datos",
+                  "Propiedad intelectual",
+                  "Administración electrónica"
+            ]
+      },
+      {
+            "asignatura": "Derecho de daños",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Responsabilidad civil",
+                  "Relación de causalidad",
+                  "Daño y reparación",
+                  "Responsabilidad por hecho ajeno"
+            ]
+      },
+      {
+            "asignatura": "Derecho penal I",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Concepto de Derecho penal",
+                  "Teoría del delito",
+                  "Autoría y participación",
+                  "Culpabilidad",
+                  "Consecuencias jurídicas del delito"
+            ]
+      },
+      {
+            "asignatura": "Derecho penal II",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Delitos contra la vida",
+                  "Delitos contra la integridad física",
+                  "Delitos contra la libertad",
+                  "Delitos patrimoniales"
+            ]
+      },
+      {
+            "asignatura": "Derecho constitucional",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Órganos constitucionales",
+                  "Comunidades autónomas",
+                  "Derechos y libertades"
+            ]
+      },
+      {
+            "asignatura": "Derecho administrativo I",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Administración pública",
+                  "Fuentes del derecho administrativo",
+                  "Posición jurídica de la administración",
+                  "Procedimiento administrativo"
+            ]
+      },
+      {
+            "asignatura": "Derecho hipotecario",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Registro de la propiedad",
+                  "Principios hipotecarios",
+                  "Publicidad registral",
+                  "Hipoteca"
+            ]
+      },
+      {
+            "asignatura": "Derecho de la contratación",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Teoría general de la contratación",
+                  "Contratación civil y mercantil",
+                  "Contratación electrónica",
+                  "Contratos típicos"
+            ]
+      },
+      {
+            "asignatura": "Propiedad intelectual",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Derechos de autor",
+                  "Derechos conexos",
+                  "Explotación de derechos",
+                  "Protección internacional"
+            ]
+      },
+      {
+            "asignatura": "Nacionalidad y extranjería",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Nacionalidad española",
+                  "Ciudadanía europea",
+                  "Derechos de extranjeros",
+                  "Asilo y refugio"
+            ]
+      },
+      {
+            "asignatura": "Instituciones de protección de la persona",
+            "modelo_evaluacion": "EC o EX",
+            "temario": [
+                  "Patria potestad",
+                  "Tutela",
+                  "Curatela",
+                  "Defensor judicial"
+            ]
+      },
+      {
+            "asignatura": "Derecho de la función pública",
+            "modelo_evaluacion": "EC o EX",
+            "temario": [
+                  "Función pública",
+                  "Acceso al empleo público",
+                  "Carrera profesional",
+                  "Responsabilidad disciplinaria"
+            ]
+      },
+      {
+            "asignatura": "Derecho urbanístico",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Régimen jurídico del suelo",
+                  "Planeamiento urbanístico",
+                  "Gestión urbanística",
+                  "Disciplina urbanística"
+            ]
+      },
+      {
+            "asignatura": "Derecho penitenciario",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Ejecución penal",
+                  "Régimen penitenciario",
+                  "Tratamiento penitenciario",
+                  "Beneficios penitenciarios"
+            ]
+      },
+      {
+            "asignatura": "Procedimientos tributarios",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Gestión tributaria",
+                  "Inspección",
+                  "Recaudación",
+                  "Procedimiento sancionador"
+            ]
+      },
+      {
+            "asignatura": "Derecho de las actividades turísticas",
+            "modelo_evaluacion": "EC o EX",
+            "temario": [
+                  "Ordenamiento turístico",
+                  "Empresas turísticas",
+                  "Disciplina turística",
+                  "Contratación turística"
+            ]
+      },
+      {
+            "asignatura": "Teoría y práctica de la prueba",
+            "modelo_evaluacion": "EC+PS o EX",
+            "temario": [
+                  "Prueba y verdad",
+                  "Razonamiento probatorio",
+                  "Probabilidad",
+                  "Presunción de inocencia"
+            ]
+      },
+      {
+            "asignatura": "Derecho romano",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Conceptos básicos del Derecho romano",
+                  "Personas y familia",
+                  "Propiedad",
+                  "Obligaciones y contratos"
+            ]
+      },
+      {
+            "asignatura": "Historia del derecho español",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Historia del Derecho",
+                  "Fuentes históricas",
+                  "Instituciones jurídicas",
+                  "Tradición jurídica española"
+            ]
+      },
+      {
+            "asignatura": "Metodología jurídica",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Interpretación jurídica",
+                  "Aplicación del derecho",
+                  "Argumentación jurídica",
+                  "Resolución de controversias"
+            ]
+      },
+      {
+            "asignatura": "Derecho y bioética",
+            "modelo_evaluacion": "EC o EX",
+            "temario": [
+                  "Bioética",
+                  "Consentimiento informado",
+                  "Eutanasia",
+                  "Biotecnología"
+            ]
+      },
+      {
+            "asignatura": "Análisis económico del derecho",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Análisis económico",
+                  "Incentivos jurídicos",
+                  "Teoría de juegos",
+                  "Políticas regulatorias"
+            ]
+      },
+      {
+            "asignatura": "Mediación y arbitraje",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Mediación",
+                  "Arbitraje",
+                  "ADR",
+                  "Resolución extrajudicial de conflictos"
+            ]
+      },
+      {
+            "asignatura": "Introduction to Common Law",
+            "modelo_evaluacion": "EC o EX",
+            "temario": [
+                  "Origins of Common Law",
+                  "US legal system",
+                  "Judicial precedent",
+                  "Civil Law vs Common Law"
+            ]
+      },
+      {
+            "asignatura": "Justicia y derechos individuales",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Teorías de la justicia",
+                  "Liberalismo",
+                  "Libertarianismo",
+                  "Derechos humanos"
+            ]
+      },
+      {
+            "asignatura": "Derecho y Religiones",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Libertad religiosa",
+                  "Objeción de conciencia",
+                  "Matrimonio canónico",
+                  "TEDH y religión"
+            ]
+      },
+      {
+            "asignatura": "Criminología",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Criminología",
+                  "Etiología criminal",
+                  "Victimología",
+                  "Prevención del delito"
+            ]
+      },
+      {
+            "asignatura": "Derecho sindical",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Libertad sindical",
+                  "Representación laboral",
+                  "Negociación colectiva",
+                  "Huelga"
+            ]
+      },
+      {
+            "asignatura": "Derecho del trabajo individual",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Relación laboral",
+                  "Contrato de trabajo",
+                  "Salario",
+                  "Extinción laboral"
+            ]
+      },
+      {
+            "asignatura": "Derecho procesal del trabajo",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Jurisdicción social",
+                  "Proceso laboral",
+                  "Recursos",
+                  "Ejecución laboral"
+            ]
+      },
+      {
+            "asignatura": "Derecho procesal civil I",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Jurisdicción",
+                  "Proceso declarativo",
+                  "Juicio ordinario",
+                  "Juicio verbal"
+            ]
+      },
+      {
+            "asignatura": "Derecho procesal civil II",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Ejecución forzosa",
+                  "Medidas cautelares",
+                  "Procesos especiales",
+                  "Jurisdicción voluntaria"
+            ]
+      },
+      {
+            "asignatura": "Derecho procesal penal",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Proceso penal",
+                  "Garantías procesales",
+                  "Persecución del delito",
+                  "Derechos del investigado"
+            ]
+      },
+      {
+            "asignatura": "Teoría general del derecho",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Norma jurídica",
+                  "Sistema jurídico",
+                  "Interpretación",
+                  "Argumentación jurídica"
+            ]
+      },
+      {
+            "asignatura": "Seminario de competencias jurídicas",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Competencias orales",
+                  "Competencias escritas",
+                  "Búsqueda jurisprudencial",
+                  "Casos prácticos"
+            ]
+      },
+      {
+            "asignatura": "Mercado interior europeo",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Mercado interior UE",
+                  "Libre circulación",
+                  "Competencia",
+                  "Derecho societario europeo"
+            ]
+      },
+      {
+            "asignatura": "Trabajo final de grado",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Investigación jurídica",
+                  "Dictamen jurídico",
+                  "Análisis doctrinal",
+                  "Presentación de resultados"
+            ]
+      },
+      {
+            "asignatura": "Derecho administrativo II",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Jurisdicción contencioso-administrativa",
+                  "Expropiación forzosa",
+                  "Responsabilidad patrimonial de la Administración",
+                  "Actividad de policía",
+                  "Actividad de fomento",
+                  "Servicio público"
+            ]
+      },
+      {
+            "asignatura": "Derecho del medio ambiente",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Concepto y principios del derecho ambiental",
+                  "Instrumentos de protección ambiental",
+                  "Responsabilidad ambiental",
+                  "Cambio climático",
+                  "Protección sectorial del medio ambiente"
+            ]
+      },
+      {
+            "asignatura": "Derecho internacional público",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "La comunidad internacional y el Derecho internacional público",
+                  "Las fuentes del Derecho internacional público",
+                  "Los sujetos del Derecho internacional público",
+                  "Aplicación del Derecho internacional",
+                  "Responsabilidad internacional",
+                  "Mantenimiento de la paz y seguridad internacional",
+                  "Protección internacional de los derechos humanos",
+                  "Protección internacional del medio ambiente"
+            ]
+      },
+      {
+            "asignatura": "Introducción al derecho de la Unión Europea",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Proceso de integración europea",
+                  "Instituciones y órganos de la Unión Europea",
+                  "Ordenamiento jurídico de la Unión Europea",
+                  "Aplicación del Derecho de la Unión Europea",
+                  "Sistema jurisdiccional de la Unión Europea",
+                  "Políticas y acciones de la Unión Europea"
+            ]
+      },
+      {
+            "asignatura": "Derecho internacional privado",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Concepto y sistema del Derecho internacional privado",
+                  "Competencia judicial internacional",
+                  "Ley aplicable",
+                  "Reconocimiento y ejecución de decisiones extranjeras",
+                  "Personas y familia internacional",
+                  "Obligaciones y contratos internacionales"
+            ]
+      },
+      {
+            "asignatura": "Filosofía del derecho",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "El concepto de derecho",
+                  "Derecho y moral",
+                  "La interpretación jurídica",
+                  "La obediencia al derecho",
+                  "Justificación del castigo",
+                  "Derecho y paternalismo"
+            ]
+      },
+      {
+            "asignatura": "Derechos humanos",
+            "modelo_evaluacion": "EC",
+            "temario": [
+                  "Fundamentos de los derechos humanos",
+                  "Derechos humanos y Constitución",
+                  "Protección internacional de los derechos humanos",
+                  "Sistema europeo de derechos humanos",
+                  "Garantías jurisdiccionales",
+                  "Retos contemporáneos y derechos emergentes"
+            ]
+      },
+      {
+            "asignatura": "Régimen jurídico del mercado",
+            "modelo_evaluacion": "EC+PF",
+            "temario": [
+                  "Instrumentos jurídicos de la actividad empresarial",
+                  "Libre competencia",
+                  "Competencia desleal",
+                  "Publicidad comercial",
+                  "Protección de consumidores"
+            ]
+      }
+];
+
+    const OPTATIVAS_CATALOGO = [
+      { nombre:"Análisis económico del Derecho", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa"], semestre:"Todos", necesarias:["Introducción a la economía","Teoría general del Derecho","Filosofía del Derecho","Derecho civil I","Derecho civil II","Derecho civil III","Derecho civil IV","Derecho mercantil I","Derecho mercantil II"], aconsejables:["Derecho de daños"] },
+      { nombre:"Criminología", creditos:4, tipo:"Optativa", ambitos:["Derecho público"], semestre:"Febrero-junio", necesarias:["Derecho penal I"], aconsejables:["Derecho penal II"] },
+      { nombre:"Derecho de la contratación", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa","Derecho patrimonial y de la persona"], semestre:"Febrero-junio", necesarias:["Derecho civil I","Derecho civil II","Derecho mercantil I"], aconsejables:[] },
+      { nombre:"Derecho de la función pública", creditos:4, tipo:"Optativa", ambitos:["Derecho público"], semestre:"Febrero-junio", necesarias:["Derecho administrativo I"], aconsejables:["Derecho administrativo II"] },
+      { nombre:"Derecho de las actividades turísticas", creditos:4, tipo:"Optativa", ambitos:["Derecho público","Derecho de la empresa"], semestre:"Febrero-junio", necesarias:[], aconsejables:[] },
+      { nombre:"Derecho procesal del trabajo", creditos:4, tipo:"Optativa", ambitos:["Derecho público","Derecho de la empresa"], semestre:"Septiembre-febrero", necesarias:["Derecho del trabajo individual","Teoría general del Derecho","Derecho civil I","Derecho civil II","Sistema constitucional español","Derecho constitucional","Derecho mercantil I","Derecho mercantil II","Derecho administrativo I","Derechos humanos","Derecho procesal civil I","Derecho procesal penal"], aconsejables:[] },
+      { nombre:"Mercado interior europeo", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa","Derecho público"], semestre:"Febrero-junio", necesarias:["Introducción al Derecho de la Unión Europea"], aconsejables:[] },
+      { nombre:"Derecho hipotecario", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa","Derecho patrimonial y de la persona"], semestre:"Septiembre-febrero", necesarias:["Derecho civil I","Derecho civil II","Derecho civil III"], aconsejables:[] },
+      { nombre:"Derecho penitenciario", creditos:4, tipo:"Optativa", ambitos:["Derecho público"], semestre:"Septiembre-febrero", necesarias:["Derecho penal I"], aconsejables:["Derecho penal II"] },
+      { nombre:"Derecho romano", creditos:4, tipo:"Optativa", ambitos:["Derecho patrimonial y de la persona","Teoría general y argumentación jurídica"], semestre:"Septiembre-febrero", necesarias:[], aconsejables:[] },
+      { nombre:"Derecho urbanístico", creditos:4, tipo:"Optativa", ambitos:["Derecho público"], semestre:"Septiembre-febrero", necesarias:["Derecho administrativo I"], aconsejables:["Derecho administrativo II"] },
+      { nombre:"Derecho y bioética", creditos:4, tipo:"Optativa", ambitos:["Derecho público","Teoría general y argumentación jurídica"], semestre:"Febrero-junio", necesarias:["Derecho civil I"], aconsejables:[] },
+      { nombre:"Derecho y religiones", creditos:4, tipo:"Optativa", ambitos:["Derecho público","Derecho patrimonial y de la persona"], semestre:"Septiembre-febrero", necesarias:["Sistema constitucional español","Derecho constitucional"], aconsejables:["Derecho civil IV"] },
+      { nombre:"Historia del Derecho español", creditos:4, tipo:"Optativa", ambitos:["Derecho patrimonial y de la persona","Teoría general y argumentación jurídica"], semestre:"Septiembre-febrero", necesarias:[], aconsejables:[] },
+      { nombre:"Instituciones de protección a la persona", creditos:4, tipo:"Optativa", ambitos:["Derecho patrimonial y de la persona"], semestre:"Febrero-junio", necesarias:[], aconsejables:[] },
+      { nombre:"Introduction to Common Law", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa","Teoría general y argumentación jurídica"], semestre:"Febrero-junio", necesarias:[], aconsejables:[] },
+      { nombre:"Justicia y Derechos individuales", creditos:4, tipo:"Optativa", ambitos:["Derecho patrimonial y de la persona","Teoría general y argumentación jurídica"], semestre:"Septiembre-febrero", necesarias:[], aconsejables:["Filosofía del Derecho"] },
+      { nombre:"Mediación y arbitraje", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa","Derecho patrimonial y de la persona","Teoría general y argumentación jurídica"], semestre:"Febrero-junio", necesarias:[], aconsejables:[] },
+      { nombre:"Metodología jurídica", creditos:4, tipo:"Optativa", ambitos:["Teoría general y argumentación jurídica"], semestre:"Febrero-junio", necesarias:["Teoría general del Derecho"], aconsejables:[] },
+      { nombre:"Nacionalidad y extranjería", creditos:4, tipo:"Optativa", ambitos:["Derecho público","Derecho patrimonial y de la persona"], semestre:"Febrero-junio", necesarias:[], aconsejables:[] },
+      { nombre:"Procedimientos tributarios", creditos:4, tipo:"Optativa", ambitos:["Derecho público","Derecho de la empresa"], semestre:"Septiembre-febrero", necesarias:[], aconsejables:["Derecho financiero y tributario I"] },
+      { nombre:"Propiedad intelectual", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa","Derecho patrimonial y de la persona"], semestre:"Septiembre-febrero", necesarias:[], aconsejables:[] },
+      { nombre:"Régimen jurídico del mercado", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa"], semestre:"Septiembre-febrero", necesarias:["Derecho mercantil I"], aconsejables:[] },
+      { nombre:"Teoría y práctica de la prueba", creditos:4, tipo:"Optativa", ambitos:["Derecho de la empresa","Teoría general y argumentación jurídica"], semestre:"Febrero-junio", necesarias:["Teoría general del Derecho","Derecho procesal civil I"], aconsejables:["Metodología jurídica"] },
+      { nombre:"Mínor 4 créditos", creditos:4, tipo:"Optativa", ambitos:["Mínor"], semestre:"Todos", necesarias:[], aconsejables:[], repetible:true },
+      { nombre:"Mínor 6 créditos", creditos:6, tipo:"Optativa", ambitos:["Mínor"], semestre:"Todos", necesarias:[], aconsejables:[], repetible:true }
+    ];
+
+    const REQUISITOS = {
+      "Idioma moderno II: Inglés / Francés": { necesarias:[], aconsejables:["Idioma moderno I: Inglés / Francés"] },
+      "Derecho civil I": { necesarias:["Fundamentos históricos del Derecho","Teoría general del Derecho"], aconsejables:[] },
+      "Sistema constitucional español": { necesarias:[], aconsejables:["Teoría general del Derecho"] },
+      "Derecho administrativo I": { necesarias:[], aconsejables:["Teoría general del Derecho","Sistema constitucional español","Derecho constitucional"] },
+      "Derecho administrativo II": { necesarias:["Derecho administrativo I"], aconsejables:[] },
+      "Derecho civil II": { necesarias:["Derecho civil I"], aconsejables:[] },
+      "Derecho civil III": { necesarias:["Derecho civil I","Derecho civil II"], aconsejables:[] },
+      "Derecho civil IV": { necesarias:["Derecho civil I","Derecho civil II","Derecho civil III"], aconsejables:[] },
+      "Derecho constitucional": { necesarias:["Sistema constitucional español"], aconsejables:["Teoría general del Derecho","Fundamentos históricos del Derecho","Política y sociedad"] },
+      "Derecho de daños": { necesarias:["Derecho civil I","Derecho civil II"], aconsejables:[] },
+      "Derecho del medio ambiente": { necesarias:["Derecho administrativo I","Derecho internacional público","Introducción al Derecho de la Unión Europea","Sistema constitucional español"], aconsejables:["Derecho administrativo II","Derecho civil II","Derecho constitucional","Derecho penal I"] },
+      "Derecho de internet": { necesarias:["Derecho administrativo I","Derecho civil I","Derecho civil II","Introducción al Derecho de la Unión Europea","Sistema constitucional español"], aconsejables:["Derecho administrativo II","Derecho civil III","Derecho constitucional"] },
+      "Derechos humanos": { necesarias:["Sistema constitucional español","Derecho internacional público"], aconsejables:[] },
+      "Derecho del trabajo individual": { necesarias:["Teoría general del Derecho","Derecho civil I","Derecho civil II","Sistema constitucional español","Derecho constitucional","Derecho mercantil I","Derecho mercantil II","Derecho administrativo I","Derechos humanos"], aconsejables:[] },
+      "Derecho sindical": { necesarias:["Derecho del trabajo individual","Teoría general del Derecho","Derecho civil I","Derecho civil II","Sistema constitucional español","Derecho constitucional","Derecho mercantil I","Derecho mercantil II","Derecho administrativo I","Derechos humanos","Derecho procesal civil I","Derecho procesal penal"], aconsejables:[] },
+      "Derecho financiero y tributario II": { necesarias:[], aconsejables:["Derecho financiero y tributario I"] },
+      "Derecho internacional privado": { necesarias:["Derecho mercantil I","Derecho civil I","Derecho civil II","Derecho civil III","Derecho civil IV","Derecho procesal civil I"], aconsejables:[] },
+      "Derecho internacional público": { necesarias:[], aconsejables:["Sistema constitucional español"] },
+      "Derecho mercantil I": { necesarias:["Derecho civil I","Derecho civil II"], aconsejables:[] },
+      "Derecho mercantil II": { necesarias:["Derecho mercantil I","Derecho civil I","Derecho civil II"], aconsejables:[] },
+      "Derecho penal III (económico)": { necesarias:["Derecho penal I","Derecho penal II"], aconsejables:[] },
+      "Derecho penal I": { necesarias:["Derecho constitucional"], aconsejables:[] },
+      "Derecho penal II": { necesarias:["Derecho penal I"], aconsejables:[] },
+      "Derecho procesal civil I": { necesarias:["Derecho constitucional","Derecho civil I","Derecho civil II","Derecho civil III"], aconsejables:[] },
+	  "Derecho procesal civil II": { necesarias:["Derecho constitucional","Derecho civil I","Derecho civil II","Derecho civil III","Derecho Procesal Civil I"], aconsejables:[] },
+      "Derecho procesal penal": { necesarias:["Derecho procesal civil I","Derecho constitucional","Derecho civil I","Derecho civil II","Derecho civil III","Derecho penal I","Derecho penal II"], aconsejables:[] },
+      "Introducción al derecho de la Unión Europea": { necesarias:["Sistema constitucional español","Derecho internacional público"], aconsejables:[] },
+      "Filosofía del Derecho": { necesarias:["Teoría general del Derecho"], aconsejables:[] },
+      "Seminario de competencias jurídicas": { necesarias:["Teoría general del Derecho","Sistema constitucional español","Derecho civil I","Derecho constitucional","Derecho penal I","Derecho internacional público","Derecho civil II","Introducción al Derecho de la Unión Europea","Derecho penal II","Derecho administrativo I","Derecho civil III","Derecho administrativo II","Derecho civil IV","Derecho financiero y tributario I","Derecho mercantil I","Derecho mercantil II","Derecho financiero y tributario II","Derecho procesal civil I","Derecho del trabajo individual","Derecho procesal penal","Derecho internacional privado"], aconsejables:[] },
+      "Trabajo final de grado (TFG)": { necesarias:["Seminario de competencias jurídicas"], aconsejables:[] }
+    };
+
+    const data = {
+      basic: [["Fundamentos históricos del Derecho",6],["Teoría general del Derecho",6],["Política y sociedad",6],["Introducción a la economía",6],["Técnicas de expresión, argumentación y negociación",6],["Uso y aplicación de las TIC",6],["Idioma moderno I: Inglés / Francés",6],["Idioma moderno II: Inglés / Francés",6],["Derecho civil I",6],["Sistema constitucional español",6]],
+      mandatory: [
+        { title:"Público y constitucional", className:"publico", items:[["Derecho administrativo I",6],["Derecho administrativo II",6],["Derecho internacional público",6],["Derechos humanos",4],["Derecho del medio ambiente",4],["Introducción al derecho de la Unión Europea",4],["Derecho de internet",6]] },
+        { title:"Civil y patrimonial", className:"civil", items:[["Derecho civil II",6],["Derecho civil III",6],["Derecho civil IV",6],["Derecho de daños",4],["Derecho internacional privado",6]] },
+        { title:"Mercantil y empresa", className:"empresa", items:[["Derecho mercantil I",6],["Derecho mercantil II",6],["Derecho del trabajo individual",6],["Derecho sindical",4]] },
+        { title:"Penal y procesal", className:"penal", items:[["Derecho penal I",6],["Derecho penal II",6],["Derecho penal III (económico)",4],["Derecho procesal civil I",6],["Derecho procesal civil II",4],["Derecho procesal penal",6]] },
+        { title:"Otras obligatorias", className:"otras", items:[["Derecho constitucional",6],["Filosofía del Derecho",6],["Derecho financiero y tributario I",6],["Derecho financiero y tributario II",6],["Seminario de competencias jurídicas",4]] }
+      ],
+      optional: [],
+      final: [["Trabajo final de grado (TFG)",6]]
+    };
+
+    let completed = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
+    let inProgress = new Set(JSON.parse(localStorage.getItem(IN_PROGRESS_KEY) || "[]"));
+    let notas = JSON.parse(localStorage.getItem(NOTAS_KEY) || "{}");
+    let avisoSemestreTimer = null;
+
+    function normalizar(texto) { return String(texto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim(); }
+    function idFor(name) { return normalizar(name).replace(/\s+/g, "-"); }
+    function reqFor(name) { return REQUISITOS[name] || OPTATIVAS_CATALOGO.find(o => normalizar(o.nombre) === normalizar(name)) || { necesarias:[], aconsejables:[] }; }
+    function planFor(name) {
+      const objetivo = normalizar(name).replace(/ derecho penal economico$/, "").replace(/^trabajo final de grado tfg$/, "trabajo final de grado");
+      return PLAN_DOCENTE.find(p => normalizar(p.asignatura) === normalizar(name))
+        || PLAN_DOCENTE.find(p => objetivo && (normalizar(p.asignatura) === objetivo || objetivo.includes(normalizar(p.asignatura)) || normalizar(p.asignatura).includes(objetivo)));
+    }
+    function escapeHtml(texto) {
+      return String(texto).replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+    }
+    function allSelectedSubjects() { return [...document.querySelectorAll(".subject")]; }
+    function isCompletedName(name) { const target = normalizar(name); return allSelectedSubjects().some(el => el.classList.contains("done") && normalizar(el.dataset.originalName || el.dataset.name) === target); }
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed]));
+      localStorage.setItem(IN_PROGRESS_KEY, JSON.stringify([...inProgress]));
+      updateAll();
+    }
+    function saveOptativas() { localStorage.setItem(OPTATIVAS_KEY, JSON.stringify(data.optional)); }
+    function saveNotas() { localStorage.setItem(NOTAS_KEY, JSON.stringify(notas)); }
+
+    function ocultarAvisoSemestre() {
+      const aviso = document.getElementById("avisoSemestre");
+      if (!aviso) return;
+      aviso.hidden = true;
+      aviso.textContent = "";
+      if (avisoSemestreTimer) {
+        clearTimeout(avisoSemestreTimer);
+        avisoSemestreTimer = null;
+      }
+    }
+
+    function mostrarAvisoSemestreTemporal(texto) {
+      const aviso = document.getElementById("avisoSemestre");
+      if (!aviso) return;
+      aviso.hidden = false;
+      aviso.textContent = texto;
+      if (avisoSemestreTimer) clearTimeout(avisoSemestreTimer);
+      avisoSemestreTimer = setTimeout(ocultarAvisoSemestre, 5000);
+    }
+
+    function cargarOptativasSeleccionadas() {
+      try {
+        const guardadas = JSON.parse(localStorage.getItem(OPTATIVAS_KEY) || "[]");
+        if (!Array.isArray(guardadas)) return;
+        data.optional = guardadas.map(item => {
+          const nombre = Array.isArray(item) ? item[0] : item;
+          const opt = OPTATIVAS_CATALOGO.find(o => o.nombre === nombre);
+          if (!opt) return null;
+          const uid = Array.isArray(item) && item[2] ? item[2] : `optativa-${idFor(opt.nombre)}`;
+          return [opt.nombre, opt.creditos, uid];
+        }).filter(Boolean);
+      } catch { data.optional = []; }
+    }
+
+    function estadoDisponibilidad(name) {
+      const r = reqFor(name);
+      const faltanNecesarias = (r.necesarias || []).filter(n => !isCompletedName(n));
+      const faltanAconsejables = (r.aconsejables || []).filter(n => !isCompletedName(n));
+      if (faltanNecesarias.length) return { color:"rojo", texto:"Faltan necesarias", faltanNecesarias, faltanAconsejables };
+      if (faltanAconsejables.length) return { color:"amarillo", texto:"Faltan recomendables", faltanNecesarias, faltanAconsejables };
+      return { color:"verde", texto:"Disponible", faltanNecesarias, faltanAconsejables };
+    }
+
+    function proximoSemestre(fecha = new Date()) { const mes = fecha.getMonth() + 1; return mes >= 2 && mes <= 6 ? "Septiembre-febrero" : "Febrero-junio"; }
+    function seImparteProximoSemestre(opt) { return opt.semestre === "Todos" || opt.semestre === proximoSemestre(); }
+
+    function optNombre(item) { return Array.isArray(item) ? item[0] : item?.nombre; }
+    function optCreditos(item) { return Array.isArray(item) ? item[1] : item?.creditos; }
+    function optUid(item) { return Array.isArray(item) ? item[2] : item?.uid; }
+    function crearUidOptativa(nombre) { return `optativa-${idFor(nombre)}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`; }
+    function esMinor(nombre) { return normalizar(nombre).startsWith("minor "); }
+
+    function ambitosContados(soloAprobadas = true) {
+      const conteo = {};
+      data.optional.forEach(item => {
+        const nombre = optNombre(item);
+        const uid = optUid(item) || `optativa-${idFor(nombre)}`;
+        if (soloAprobadas && !completed.has(uid)) return;
+        const opt = OPTATIVAS_CATALOGO.find(o => o.nombre === nombre);
+        if (!opt || opt.ambitos.includes("Mínor")) return;
+        opt.ambitos.forEach(a => conteo[a] = (conteo[a] || 0) + 1);
+      });
+      return conteo;
+    }
+    function ambitosMayoritarios() { const c = ambitosContados(false); const max = Math.max(0, ...Object.values(c)); return max ? Object.entries(c).filter(([,n]) => n === max).map(([a]) => a) : []; }
+    function mencionesAprobadas() { return Object.entries(ambitosContados(true)).filter(([,n]) => n >= 4).map(([a]) => a); }
+
+    function aplicarEstadoSeleccion(label, input, id) {
+      const estaAprobada = completed.has(id);
+      const estaEnCurso = inProgress.has(id) && !estaAprobada;
+      label.classList.toggle("done", estaAprobada);
+      label.classList.toggle("in-progress", estaEnCurso);
+      input.checked = estaAprobada;
+      input.indeterminate = estaEnCurso;
+      input.setAttribute("aria-label", estaAprobada ? "Asignatura aprobada" : estaEnCurso ? "Asignatura en curso" : "Asignatura no seleccionada");
+      label.dataset.estado = estaAprobada ? "aprobada" : estaEnCurso ? "en-curso" : "inicial";
+      const optionalCard = label.closest(".optional-card");
+      if (optionalCard) optionalCard.classList.toggle("done-card", estaAprobada);
+    }
+
+    function cambiarEstadoAsignatura(label, input, id) {
+      // Ciclo de selección:
+      // 1 clic: sin seleccionar -> en curso
+      // 2 clics: en curso -> aprobada
+      // 3 clics: aprobada -> sin seleccionar
+      if (!inProgress.has(id) && !completed.has(id)) {
+        inProgress.add(id);
+      } else if (inProgress.has(id)) {
+        inProgress.delete(id);
+        completed.add(id);
+      } else if (completed.has(id)) {
+        completed.delete(id);
+        inProgress.delete(id);
+      }
+
+      aplicarEstadoSeleccion(label, input, id);
+      saveProgress();
+    }
+
+    function makeSubject(name, credits, category, extraClass = "", customId = null) {
+      const id = customId || idFor(name);
+      const label = document.createElement("label");
+      label.className = `subject ${extraClass}`;
+      label.dataset.name = name.toLowerCase();
+      label.dataset.originalName = name;
+      label.dataset.category = category;
+      label.dataset.credits = String(credits);
+      label.dataset.id = id;
+      if (completed.has(id)) inProgress.delete(id);
+
+      const status = document.createElement("span");
+      status.className = "req-dot";
+      label.appendChild(status);
+
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        cambiarEstadoAsignatura(label, input, id);
+      });
+
+      label.addEventListener("click", e => {
+        if (e.target.closest(".grade-input") || e.target.closest(".remove-optativa")) return;
+        e.preventDefault();
+        cambiarEstadoAsignatura(label, input, id);
+      });
+
+      const span = document.createElement("span");
+      span.className = "name";
+      span.textContent = name;
+
+      label.append(input, span);
+
+      if (credits === 4) {
+        const badge = document.createElement("span");
+        badge.className = "credits";
+        badge.textContent = "4";
+        label.appendChild(badge);
+      } else {
+        const spacer = document.createElement("span");
+        spacer.className = "credits credit-spacer";
+        spacer.textContent = String(credits);
+        spacer.style.visibility = "hidden";
+        label.appendChild(spacer);
+      }
+
+      const infoBtn = document.createElement("button");
+      infoBtn.type = "button";
+      infoBtn.className = "info-subject";
+      infoBtn.textContent = "i";
+      infoBtn.title = "Ver modelo de evaluación y contenidos";
+      infoBtn.setAttribute("aria-label", `Ver información de ${name}`);
+      infoBtn.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        abrirPlanDocente(name);
+      });
+      label.appendChild(infoBtn);
+
+      const nota = document.createElement("input");
+      nota.className = "grade-input";
+      nota.type = "number";
+      nota.min = "0";
+      nota.max = "10";
+      nota.step = "0.1";
+      nota.placeholder = "Nota";
+      nota.value = notas[id] ?? "";
+      nota.title = "Nota de 0 a 10";
+      nota.addEventListener("click", e => e.stopPropagation());
+      nota.addEventListener("change", () => {
+        if (nota.value === "") delete notas[id];
+        else notas[id] = Math.max(0, Math.min(10, Number(nota.value)));
+        nota.value = notas[id] ?? "";
+        saveNotas();
+      });
+      label.appendChild(nota);
+
+      aplicarEstadoSeleccion(label, input, id);
+
+      if (category === "optional") {
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-optativa";
+        remove.textContent = "Quitar";
+        remove.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); quitarOptativa(id); });
+        label.appendChild(remove);
+      }
+      return label;
+    }
+
+    function addArrow(parent) { const arrow = document.createElement("div"); arrow.className = "arrow"; arrow.textContent = "↓"; parent.appendChild(arrow); }
+
+    function renderProgressCards() {
+      const progressGrid = document.getElementById("progressGrid");
+      const cards = [["basic","Básicas","basic"],["mandatory","Obligatorias","mand"],["optional","Optativas","opt"],["total","Total","total"]];
+      progressGrid.innerHTML = cards.map(([key,title,className]) => `<article class="progress-card ${className}" data-progress-card="${key}"><h3>${title}</h3><div class="progress-line"><span>Asignaturas</span><strong data-subjects>0/0</strong></div><div class="bar"><span data-subject-bar></span></div><div class="progress-line"><span>Créditos</span><strong data-credits>0/0</strong></div><div class="bar"><span data-credit-bar></span></div></article>`).join("");
+    }
+
+    function renderPage() {
+      cargarOptativasSeleccionadas();
+      renderProgressCards();
+      document.getElementById("basic").innerHTML = "";
+      data.basic.forEach(([name, credits]) => document.getElementById("basic").appendChild(makeSubject(name, credits, "basic")));
+      const mandatoryContainer = document.getElementById("mandatory");
+      mandatoryContainer.innerHTML = "";
+      data.mandatory.forEach(area => {
+        const areaBox = document.createElement("div"); areaBox.className = `area ${area.className}`;
+        const title = document.createElement("h3"); title.textContent = area.title;
+        const chain = document.createElement("div"); chain.className = "chain";
+        area.items.forEach(([name, credits], index) => { if (index > 0) addArrow(chain); chain.appendChild(makeSubject(name, credits, "mandatory")); });
+        areaBox.append(title, chain); mandatoryContainer.appendChild(areaBox);
+      });
+      renderOptativas();
+      const finalContainer = document.getElementById("final"); finalContainer.innerHTML = "";
+      data.final.forEach(([name, credits]) => finalContainer.appendChild(makeSubject(name, credits, "final", "tfg")));
+      const hideDoneCheckbox = document.getElementById("hideDone");
+      hideDoneCheckbox.checked = localStorage.getItem(HIDE_KEY) === "1";
+      document.body.classList.toggle("hide-done", hideDoneCheckbox.checked);
+      updateAll();
+    }
+
+    function renderOptativas() {
+      const optionalContainer = document.getElementById("optional");
+      optionalContainer.innerHTML = "";
+      data.optional.forEach(item => {
+        const name = optNombre(item);
+        const credits = optCreditos(item);
+        const uid = optUid(item) || `optativa-${idFor(name)}`;
+        const card = document.createElement("div"); card.className = "optional-card filled";
+        const subject = makeSubject(name, credits, "optional", "opt", uid);
+        const opt = OPTATIVAS_CATALOGO.find(o => o.nombre === name);
+        if (opt && opt.ambitos && opt.ambitos.length) {
+          const ambitos = document.createElement("small");
+          ambitos.className = "optional-ambitos";
+          ambitos.textContent = opt.ambitos.join(" · ");
+          subject.appendChild(ambitos);
+        }
+        if (subject.classList.contains("done")) card.classList.add("done-card");
+        card.appendChild(subject); optionalContainer.appendChild(card);
+      });
+      if (!data.optional.length) optionalContainer.innerHTML = '<p class="empty-optativas">Elige tus optativas desde el listado superior.</p>';
+      pintarSelectorOptativas();
+    }
+
+    function quitarOptativa(uid) {
+      ocultarAvisoSemestre();
+      completed.delete(uid); inProgress.delete(uid); delete notas[uid];
+      data.optional = data.optional.filter(item => (optUid(item) || `optativa-${idFor(optNombre(item))}`) !== uid);
+      saveOptativas(); saveNotas(); localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed])); localStorage.setItem(IN_PROGRESS_KEY, JSON.stringify([...inProgress]));
+      renderOptativas(); updateAll();
+    }
+
+    function colorAmbito(ambito) {
+      if (ambito === "Derecho público") return "publico";
+      if (ambito === "Derecho de la empresa") return "empresa";
+      if (ambito === "Derecho patrimonial y de la persona") return "patrimonial";
+      if (ambito === "Teoría general y argumentación jurídica") return "teoria";
+      if (ambito === "Mínor") return "minor";
+      return "";
+    }
+
+    function pintarSelectorOptativas() {
+      const selector = document.getElementById("selectorOptativas");
+      if (!selector) return;
+      const elegidas = new Set(data.optional.map(item => optNombre(item)));
+      const mayoritarios = ambitosMayoritarios();
+      selector.innerHTML = '<option value="">Selecciona una optativa...</option>';
+      const agrupadas = {};
+      OPTATIVAS_CATALOGO.filter(o => o.repetible || !elegidas.has(o.nombre)).forEach(o => o.ambitos.forEach(a => { (agrupadas[a] ||= []).push(o); }));
+      Object.entries(agrupadas).forEach(([ambito, opts]) => {
+        const group = document.createElement("optgroup");
+        group.label = ambito;
+        group.dataset.color = colorAmbito(ambito);
+        opts.forEach(o => {
+          const option = document.createElement("option");
+          option.value = o.nombre;
+          option.dataset.color = colorAmbito(o.ambitos[0]);
+          const star = o.ambitos.some(a => mayoritarios.includes(a));
+          if (star) option.dataset.destacada = "1";
+          option.textContent = `${star ? "★ " : ""}${o.nombre} · ${o.creditos} cr. · ${o.semestre}`;
+          group.appendChild(option);
+        });
+        selector.appendChild(group);
+      });
+      selector.disabled = data.optional.length >= MAX_OPTATIVAS;
+      document.getElementById("contadorOptativas").textContent = `${data.optional.length}/${MAX_OPTATIVAS} optativas elegidas`;
+      const info = document.getElementById("ambitoMayoritatio");
+      if (mayoritarios.length) { info.hidden = false; info.textContent = `Ya has empezado el ámbito: ${mayoritarios.join(", ")}. Las optativas de ese ámbito aparecen con ★.`; }
+      else info.hidden = true;
+    }
+
+    function totalsFor(category) {
+      const selector = category === "total" ? ".subject" : `.subject[data-category='${category}']`;
+      const subjects = [...document.querySelectorAll(selector)];
+      const doneSubjects = subjects.filter(e => e.classList.contains("done"));
+      let creditsTotal = subjects.reduce((sum, e) => sum + Number(e.dataset.credits), 0);
+      let subjectsTotal = subjects.length;
+      if (category === "optional") { creditsTotal = 28; subjectsTotal = MAX_OPTATIVAS; }
+      if (category === "total") { creditsTotal = 240; subjectsTotal = 10 + 27 + MAX_OPTATIVAS + 1; }
+      const creditsDone = doneSubjects.reduce((sum, e) => sum + Number(e.dataset.credits), 0);
+      return { subjectsDone: doneSubjects.length, subjectsTotal, creditsDone, creditsTotal };
+    }
+    function percentage(done, total) { return total ? Math.min(100, Math.round((done / total) * 100)) : 0; }
+
+    function updateProgress() {
+      ["basic","mandatory","optional","total"].forEach(category => {
+        const card = document.querySelector(`[data-progress-card='${category}']`); if (!card) return;
+        const totals = totalsFor(category);
+        const pendingSubjects = Math.max(0, totals.subjectsTotal - totals.subjectsDone);
+        const pendingCredits = Math.max(0, totals.creditsTotal - totals.creditsDone);
+        card.querySelector("[data-subjects]").textContent = `${totals.subjectsDone}/${totals.subjectsTotal}`;
+        card.querySelector("[data-credits]").textContent = `${totals.creditsDone}/${totals.creditsTotal}`;
+        card.querySelector("[data-subject-bar]").style.width = `${percentage(totals.subjectsDone, totals.subjectsTotal)}%`;
+        card.querySelector("[data-credit-bar]").style.width = `${percentage(totals.creditsDone, totals.creditsTotal)}%`;
+        card.title = `Faltan ${pendingSubjects} asignatura${pendingSubjects === 1 ? "" : "s"} y ${pendingCredits} crédito${pendingCredits === 1 ? "" : "s"}.`;
+        card.classList.toggle("complete", totals.subjectsTotal > 0 && pendingSubjects === 0);
+      });
+      ["basic","mandatory","optional","final"].forEach(category => { const totals = totalsFor(category); const section = document.querySelector(`[data-section='${category}']`); if (section) section.classList.toggle("complete", totals.subjectsTotal > 0 && totals.subjectsDone === totals.subjectsTotal); });
+      const total = totalsFor("total"); document.title = `(${total.subjectsDone}/${total.subjectsTotal}) Itinerario Grado en Derecho`;
+    }
+
+    function updateRequirementDots() {
+      document.querySelectorAll(".subject").forEach(subject => {
+        const status = estadoDisponibilidad(subject.dataset.originalName);
+        const dot = subject.querySelector(".req-dot"); if (!dot) return;
+        dot.className = `req-dot ${status.color}`;
+        const faltan = status.faltanNecesarias.length ? `Faltan necesarias: ${status.faltanNecesarias.join(", ")}` : status.faltanAconsejables.length ? `Faltan recomendables: ${status.faltanAconsejables.join(", ")}` : "Disponible para cursar";
+        dot.title = faltan;
+        subject.title = faltan;
+      });
+    }
+
+    function updateArrows() {
+      document.querySelectorAll(".chain").forEach(chain => {
+        const children = [...chain.children];
+        for (let i = 0; i < children.length; i++) {
+          const child = children[i]; if (!child.classList.contains("arrow")) continue;
+          const previous = children[i - 1], next = children[i + 1];
+          child.classList.toggle("hidden-done", previous?.classList.contains("done") || next?.classList.contains("done"));
+        }
+      });
+    }
+
+    function mediaPonderada() {
+      const subjects = allSelectedSubjects();
+      let puntos = 0, creditos = 0;
+      subjects.forEach(el => {
+        const id = el.dataset.id;
+        if (notas[id] === undefined || notas[id] === "") return;
+        const n = Number(notas[id]);
+        if (Number.isNaN(n)) return;
+        const c = Number(el.dataset.credits);
+        puntos += n * c; creditos += c;
+      });
+      return creditos ? puntos / creditos : null;
+    }
+
+    function updateMenciones() {
+      const box = document.getElementById("mencionesBox");
+      const menciones = mencionesAprobadas();
+      box.innerHTML = menciones.map(a => `<div class="mention-ok">🎉 Enhorabuena, aprobada mención en el ámbito ${a}.</div>`).join("");
+    }
+
+    function updateAll() { updateProgress(); updateRequirementDots(); updateArrows(); pintarSelectorOptativas(); updateMenciones(); }
+
+
+    function renderApprovedSummary() {
+      const aprobadas = allSelectedSubjects().filter(el => el.classList.contains("done"));
+      const media = mediaPonderada();
+      const rows = aprobadas.map(el => {
+        const id = el.dataset.id;
+        const nota = notas[id] === undefined || notas[id] === "" ? "—" : notas[id];
+        return `<tr><td>${escapeHtml(el.dataset.originalName)}</td><td>${escapeHtml(tipoAsignaturaParaResumen(el))}</td><td>${el.dataset.credits}</td><td>${nota}</td></tr>`;
+      }).join("");
+      document.getElementById("approvedContent").innerHTML = `
+        <table class="approved-table">
+          <thead><tr><th>Asignatura</th><th>Tipo</th><th>Créditos</th><th>Nota</th></tr></thead>
+          <tbody>${rows || '<tr><td colspan="4">No hay asignaturas aprobadas marcadas.</td></tr>'}</tbody>
+          <tfoot><tr><td colspan="3">Media ponderada con las notas introducidas</td><td>${media === null ? "Sin notas" : media.toFixed(2)}</td></tr></tfoot>
+        </table>
+      `;
+    }
+
+    function abrirPlanDocente(name) {
+      const plan = planFor(name);
+      const req = reqFor(name);
+      const opt = OPTATIVAS_CATALOGO.find(o => normalizar(o.nombre) === normalizar(name));
+      const content = document.getElementById("planContent");
+      if (!plan) {
+        content.innerHTML = `
+          <div class="plan-box">
+            <h3>${escapeHtml(name)}</h3>
+            <p>No hay información de plan docente para esta asignatura.</p>
+            ${opt ? `<p><strong>Ámbito:</strong> ${escapeHtml(opt.ambitos.join(" / "))}</p><p><strong>Semestre:</strong> ${escapeHtml(opt.semestre)}</p>` : ""}
+            <p><strong>Necesarias:</strong> ${(req.necesarias || []).length ? escapeHtml(req.necesarias.join(", ")) : "—"}</p>
+            <p><strong>Aconsejables:</strong> ${(req.aconsejables || []).length ? escapeHtml(req.aconsejables.join(", ")) : "—"}</p>
+          </div>
+        `;
+      } else {
+        content.innerHTML = `
+          <div class="plan-box">
+            <h3>${escapeHtml(name)}</h3>
+            <span class="plan-pill">Modelo de evaluación: ${escapeHtml(plan.modelo_evaluacion)}</span>
+            ${opt ? `<p><strong>Ámbito:</strong> ${escapeHtml(opt.ambitos.join(" / "))}<br><strong>Semestre:</strong> ${escapeHtml(opt.semestre)}</p>` : ""}
+            <div>
+              <strong>Contenidos / temario:</strong>
+              <ul>${(plan.temario || []).map(t => `<li>${escapeHtml(t)}</li>`).join("")}</ul>
+            </div>
+            <p><strong>Necesarias:</strong> ${(req.necesarias || []).length ? escapeHtml(req.necesarias.join(", ")) : "—"}</p>
+            <p><strong>Aconsejables:</strong> ${(req.aconsejables || []).length ? escapeHtml(req.aconsejables.join(", ")) : "—"}</p>
+          </div>
+        `;
+      }
+      document.getElementById("planModal").classList.add("open");
+    }
+
+    function renderSummary() {
+      const groups = [["basic","Básicas"],["mandatory","Obligatorias"],["optional","Optativas"],["final","TFG"],["total","Total"]];
+      let html = '<div class="summary-list">';
+      groups.forEach(([category, label]) => {
+        const totals = totalsFor(category);
+        const pendingSubjects = Math.max(0, totals.subjectsTotal - totals.subjectsDone);
+        const pendingCredits = Math.max(0, totals.creditsTotal - totals.creditsDone);
+        html += `<div class="summary-row"><span>${label}</span><strong>${pendingSubjects} asignatura${pendingSubjects === 1 ? "" : "s"} · ${pendingCredits} crédito${pendingCredits === 1 ? "" : "s"}</strong></div>`;
+      });
+      const media = mediaPonderada();
+      html += `<div class="summary-row"><span>Media ponderada con las notas introducidas</span><strong>${media === null ? "Sin notas" : media.toFixed(2)}</strong></div>`;
+      mencionesAprobadas().forEach(a => html += `<div class="mention-ok">🎉 Enhorabuena, aprobada mención en el ámbito ${a}.</div>`);
+      const total = totalsFor("total");
+      const pendingTotalSubjects = Math.max(0, total.subjectsTotal - total.subjectsDone);
+      html += `</div>
+        <div class="semester-box">
+          <strong>Estimación de semestres restantes según carga de matrícula:</strong>
+          <table class="semester-table">
+            <thead>
+              <tr>
+                <th>Asignaturas/semestre</th>
+                <th>Semestres restantes</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[2,3,4,5,6].map(n => `<tr><td>${n}</td><td>${Math.ceil(pendingTotalSubjects / n)}</td></tr>`).join("")}
+            </tbody>
+          </table>
+        </div>`;
+      document.getElementById("summaryContent").innerHTML = html;
+    }
+
+    document.getElementById("selectorOptativas").addEventListener("change", event => {
+      const nombre = event.target.value; if (!nombre || data.optional.length >= MAX_OPTATIVAS) return;
+      const opt = OPTATIVAS_CATALOGO.find(o => o.nombre === nombre); if (!opt) return;
+      const uid = opt.repetible ? crearUidOptativa(opt.nombre) : `optativa-${idFor(opt.nombre)}`;
+      data.optional.push([opt.nombre, opt.creditos, uid]); saveOptativas();
+      if (!seImparteProximoSemestre(opt)) {
+        mostrarAvisoSemestreTemporal(`Aviso: ${opt.nombre} se imparte en ${opt.semestre}, pero el próximo semestre previsto es ${proximoSemestre()}.`);
+      } else {
+        ocultarAvisoSemestre();
+      }
+      renderOptativas(); updateAll(); event.target.value = "";
+    });
+
+
+
+    function tipoAsignaturaParaResumen(el) {
+      const cat = el.dataset.category;
+      if (cat === "basic") return "Básica";
+      if (cat === "mandatory") return "Obligatoria";
+      if (cat === "optional") return "Optativa";
+      if (cat === "final") return "TFG";
+      return "";
+    }
+
+    function prepararPaginaAprobadasPDF() {
+      const page = document.getElementById("printApprovedPage");
+      if (!page) return;
+      const aprobadas = allSelectedSubjects().filter(el => el.classList.contains("done"));
+      const rows = aprobadas.map(el => {
+        const id = el.dataset.id;
+        const nota = notas[id] === undefined || notas[id] === "" ? "—" : notas[id];
+        return `<tr><td>${el.dataset.originalName}</td><td>${tipoAsignaturaParaResumen(el)}</td><td>${el.dataset.credits}</td><td>${nota}</td></tr>`;
+      }).join("");
+      page.innerHTML = `
+        <h2 class="print-approved-title">Asignaturas aprobadas y nota</h2>
+        <table class="print-approved-table">
+          <thead><tr><th>Asignatura</th><th>Tipo</th><th>Créditos</th><th>Nota</th></tr></thead>
+          <tbody>${rows || '<tr><td colspan="4">No hay asignaturas aprobadas marcadas.</td></tr>'}</tbody>
+        </table>
+      `;
+    }
+
+    document.getElementById("search").addEventListener("input", event => {
+      const query = event.target.value.trim().toLowerCase();
+      document.querySelectorAll(".subject").forEach(subject => subject.classList.toggle("hidden", query && !subject.dataset.name.includes(query)));
+    });
+    document.getElementById("hideDone").addEventListener("change", event => { document.body.classList.toggle("hide-done", event.target.checked); localStorage.setItem(HIDE_KEY, event.target.checked ? "1" : "0"); updateArrows(); });
+    document.getElementById("summaryBtn").addEventListener("click", () => { renderSummary(); document.getElementById("summaryModal").classList.add("open"); });
+    document.getElementById("approvedBtn").addEventListener("click", () => { renderApprovedSummary(); document.getElementById("approvedModal").classList.add("open"); });
+    document.getElementById("pdfBtn").addEventListener("click", () => {
+      const hideDoneCheckbox = document.getElementById("hideDone"); const wasHideDoneChecked = hideDoneCheckbox.checked;
+      prepararPaginaAprobadasPDF();
+      document.body.classList.add("print-pending", "hide-done"); hideDoneCheckbox.checked = true; updateArrows(); window.print();
+      setTimeout(() => { document.body.classList.remove("print-pending"); document.body.classList.toggle("hide-done", wasHideDoneChecked); hideDoneCheckbox.checked = wasHideDoneChecked; updateArrows(); }, 500);
+    });
+    document.getElementById("closeSummary").addEventListener("click", () => document.getElementById("summaryModal").classList.remove("open"));
+    document.getElementById("closeApproved").addEventListener("click", () => document.getElementById("approvedModal").classList.remove("open"));
+    document.getElementById("closePlan").addEventListener("click", () => document.getElementById("planModal").classList.remove("open"));
+    document.getElementById("summaryModal").addEventListener("click", event => { if (event.target.id === "summaryModal") document.getElementById("summaryModal").classList.remove("open"); });
+    document.getElementById("approvedModal").addEventListener("click", event => { if (event.target.id === "approvedModal") document.getElementById("approvedModal").classList.remove("open"); });
+    document.getElementById("planModal").addEventListener("click", event => { if (event.target.id === "planModal") document.getElementById("planModal").classList.remove("open"); });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        document.getElementById("summaryModal").classList.remove("open");
+        document.getElementById("approvedModal").classList.remove("open");
+        document.getElementById("planModal").classList.remove("open");
+      }
+    });
+
+    renderPage();
+  </script>
+
+</body>
+</html>
