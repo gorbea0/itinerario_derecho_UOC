@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Itinerario Grado en Derecho UOC</title>
 
+
   <style>
     :root {
       --azul: #1d4ed8;
@@ -352,6 +353,12 @@
 
     .summary-row strong {
       color: var(--azul-oscuro);
+    }
+
+    .summary-row.complete-summary {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
     }
 
     .semester-box {
@@ -1473,6 +1480,119 @@
       #selectorOptativas optgroup[data-color="minor"] { background: #f0fdf4; color: #15803d; }
     }
 
+
+
+    /* Resumen visual de asignaturas aprobadas */
+    .approved-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .approved-metric {
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      background: #f8fafc;
+      padding: 12px;
+      color: #334155;
+      font-size: 0.9rem;
+    }
+
+    .approved-metric strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--azul-oscuro);
+      font-size: 1.15rem;
+    }
+
+    .approved-bar {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .approved-bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--verde);
+      border-radius: 999px;
+    }
+
+    .course-visual {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 10px 0 14px;
+    }
+
+    .course-step {
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 9px 8px;
+      text-align: center;
+      background: #f8fafc;
+      font-weight: 800;
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    .course-step.done {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    .course-step.active {
+      background: #dbeafe;
+      color: #1e3a8a;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
+    }
+
+    @media (max-width: 720px) {
+      .course-visual { grid-template-columns: repeat(2, 1fr); }
+    }
+
+
+    .semester-visual {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 10px 0 14px;
+    }
+
+    .semester-step {
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 9px 8px;
+      text-align: center;
+      background: #f8fafc;
+      font-weight: 800;
+      color: #64748b;
+      font-size: 0.84rem;
+    }
+
+    .semester-step.done {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    .semester-step.active {
+      background: #dbeafe;
+      color: #1e3a8a;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
+    }
+
+    @media (max-width: 720px) {
+      .semester-visual { grid-template-columns: repeat(2, 1fr); }
+    }
+
   </style>
 </head>
 
@@ -1492,9 +1612,9 @@
 
   <main class="wrap">
     <section class="stats">
-      <div class="stat">Formación básica <strong>60 créditos</strong></div>
-      <div class="stat">Obligatorias <strong>146 créditos</strong></div>
-      <div class="stat">Optativas <strong>28 créditos</strong></div>
+      <div class="stat">Formación básica <strong>60 créditos · 10 asignaturas</strong></div>
+      <div class="stat">Obligatorias <strong>146 créditos · 27 asignaturas</strong></div>
+      <div class="stat">Optativas <strong><span id="optativasStatCreditos">0</span>/28 créditos seleccionados</strong></div>
       <div class="stat">TFG <strong>6 créditos</strong></div>
       <div class="stat">Total <strong>240 créditos</strong></div>
     </section>
@@ -2688,7 +2808,14 @@
     }
     function percentage(done, total) { return total ? Math.min(100, Math.round((done / total) * 100)) : 0; }
 
+    function updateStatsPanel() {
+      const optCreditosSeleccionados = data.optional.reduce((sum, item) => sum + Number(optCreditos(item) || 0), 0);
+      const optStat = document.getElementById("optativasStatCreditos");
+      if (optStat) optStat.textContent = String(optCreditosSeleccionados);
+    }
+
     function updateProgress() {
+      updateStatsPanel();
       ["basic","mandatory","optional","total"].forEach(category => {
         const card = document.querySelector(`[data-progress-card='${category}']`); if (!card) return;
         const totals = totalsFor(category);
@@ -2750,15 +2877,59 @@
     function updateAll() { updateProgress(); updateRequirementDots(); updateArrows(); pintarSelectorOptativas(); updateMenciones(); }
 
 
+    function semestreActual(fecha = new Date()) {
+      const mes = fecha.getMonth() + 1;
+      if (mes === 1 || mes >= 9) return "Septiembre-febrero";
+      if (mes >= 2 && mes <= 6) return "Febrero-junio";
+      return "Periodo intersemestral";
+    }
+
+    function semestreEstimadoPorCreditos(creditosAprobados) {
+      if (creditosAprobados >= 240) return { semestre: 8, texto: "Grado completado" };
+      const semestre = Math.min(8, Math.max(1, Math.floor(creditosAprobados / 30) + 1));
+      return { semestre, texto: `${semestre}.º semestre estimado` };
+    }
+
+    function renderSemesterVisual(semestreActual, creditosAprobados) {
+      return [1, 2, 3, 4, 5, 6, 7, 8].map(semestre => {
+        const clase = creditosAprobados >= semestre * 30 ? "done" : semestre === semestreActual ? "active" : "";
+        const etiqueta = creditosAprobados >= semestre * 30 ? "✓" : semestre === semestreActual ? "estimado" : "";
+        return `<div class="semester-step ${clase}">S${semestre}<br><small>${etiqueta}</small></div>`;
+      }).join("");
+    }
+
+
+    function renderCourseVisual(creditosAprobados) {
+      const cursoActual = creditosAprobados >= 240 ? 4 : Math.min(4, Math.max(1, Math.floor(creditosAprobados / 60) + 1));
+      return [1, 2, 3, 4].map(curso => {
+        const creditosCurso = curso * 60;
+        const clase = creditosAprobados >= creditosCurso ? "done" : curso === cursoActual ? "active" : "";
+        const etiqueta = creditosAprobados >= creditosCurso ? "completo" : curso === cursoActual ? "actual" : "pendiente";
+        return `<div class="course-step ${clase}">${curso}.º curso<br><small>${etiqueta}</small></div>`;
+      }).join("");
+    }
+
     function renderApprovedSummary() {
       const aprobadas = allSelectedSubjects().filter(el => el.classList.contains("done"));
       const media = mediaPonderada();
+      const total = totalsFor("total");
+      const creditosAprobados = total.creditsDone;
+      const porcentajeCreditos = total.creditsTotal ? Math.round((creditosAprobados / total.creditsTotal) * 100) : 0;
+      const porcentajeAsignaturas = total.subjectsTotal ? Math.round((total.subjectsDone / total.subjectsTotal) * 100) : 0;
+      const semestreInfo = semestreEstimadoPorCreditos(creditosAprobados);
       const rows = aprobadas.map(el => {
         const id = el.dataset.id;
         const nota = notas[id] === undefined || notas[id] === "" ? "—" : notas[id];
         return `<tr><td>${escapeHtml(el.dataset.originalName)}</td><td>${escapeHtml(tipoAsignaturaParaResumen(el))}</td><td>${el.dataset.credits}</td><td>${nota}</td></tr>`;
       }).join("");
       document.getElementById("approvedContent").innerHTML = `
+        <div class="approved-overview">
+          <div class="approved-metric">Semestres estimados cursados<strong>${semestreInfo.texto}</strong></div>
+          <div class="approved-metric">Semestre actual<strong>${semestreActual()}</strong></div>
+          <div class="approved-metric">Progreso aprobado<strong>${total.subjectsDone}/${total.subjectsTotal} asignaturas · ${creditosAprobados}/${total.creditsTotal} créditos</strong><div class="approved-bar"><span style="width:${porcentajeCreditos}%"></span></div></div>
+          <div class="approved-metric">Porcentaje aprobado<strong>${porcentajeCreditos}% créditos · ${porcentajeAsignaturas}% asignaturas</strong></div>
+        </div>
+        <div class="course-visual">${renderCourseVisual(creditosAprobados)}</div>
         <table class="approved-table">
           <thead><tr><th>Asignatura</th><th>Tipo</th><th>Créditos</th><th>Nota</th></tr></thead>
           <tbody>${rows || '<tr><td colspan="4">No hay asignaturas aprobadas marcadas.</td></tr>'}</tbody>
@@ -2813,7 +2984,10 @@
         const totals = totalsFor(category);
         const pendingSubjects = Math.max(0, totals.subjectsTotal - totals.subjectsDone);
         const pendingCredits = Math.max(0, totals.creditsTotal - totals.creditsDone);
-        html += `<div class="summary-row"><span>${label}</span><strong>${pendingSubjects} asignatura${pendingSubjects === 1 ? "" : "s"} · ${pendingCredits} crédito${pendingCredits === 1 ? "" : "s"}</strong></div>`;
+        const resumenGrupo = pendingSubjects === 0 && totals.subjectsTotal > 0
+          ? `🎉 Grupo completado · ${totals.creditsDone}/${totals.creditsTotal} créditos`
+          : `${pendingSubjects} asignatura${pendingSubjects === 1 ? "" : "s"} · ${pendingCredits} crédito${pendingCredits === 1 ? "" : "s"}`;
+        html += `<div class="summary-row${pendingSubjects === 0 && totals.subjectsTotal > 0 ? " complete-summary" : ""}"><span>${label}</span><strong>${resumenGrupo}</strong></div>`;
       });
       const media = mediaPonderada();
       html += `<div class="summary-row"><span>Media ponderada con las notas introducidas</span><strong>${media === null ? "Sin notas" : media.toFixed(2)}</strong></div>`;
