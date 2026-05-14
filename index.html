@@ -1656,7 +1656,7 @@
     <div id="approvedModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="approvedTitle">
       <div class="modal modal-wide">
         <header>
-          <h2 id="approvedTitle">Asignaturas aprobadas con nota</h2>
+          <h2 id="approvedTitle">Asignaturas aprobadas</h2>
           <button id="closeApproved" class="modal-close" aria-label="Cerrar">✕</button>
         </header>
         <div id="approvedContent"></div>
@@ -1674,17 +1674,17 @@
     </div>
 
     <section class="section" data-section="basic">
-      <h2 class="section-title" style="color: var(--azul);">Formación básica · 60 créditos</h2>
+      <h2 class="section-title" style="color: var(--azul);">Formación básica · 60 créditos · 10 asignaturas</h2>
       <div class="basic-grid" id="basic"></div>
     </section>
 
     <section class="section" data-section="mandatory">
-      <h2 class="section-title" style="color: var(--rojo);">Obligatorias · 146 créditos</h2>
+      <h2 class="section-title" style="color: var(--rojo);">Obligatorias · 146 créditos · 27 asignaturas</h2>
       <div class="areas" id="mandatory"></div>
     </section>
 
     <section class="section" data-section="optional">
-      <h2 class="section-title" style="color: var(--verde);">Optativas  · 28 créditos</h2>
+      <h2 class="section-title" style="color: var(--verde);">Optativas  · 28 créditos . 7 asignaturas aprox</h2>
       <div class="optional-selector-box">
         <div class="selector-meta">
           <span>Elige hasta 7 optativas desde el listado</span>
@@ -2887,7 +2887,7 @@
     function semestreEstimadoPorCreditos(creditosAprobados) {
       if (creditosAprobados >= 240) return { semestre: 8, texto: "Grado completado" };
       const semestre = Math.min(8, Math.max(1, Math.floor(creditosAprobados / 30) + 1));
-      return { semestre, texto: `${semestre}.º semestre estimado` };
+      return { semestre, texto: `${semestre}.º semestre` };
     }
 
     function renderSemesterVisual(semestreActual, creditosAprobados) {
