@@ -3,11 +3,10 @@
 <head>
   <meta name="description" content="Itinerario grado de derecho UOC">
   <meta charset="utf-8">
-  <meta name="vesion" content="Oscar Unzueta ver4">
+  <meta name="vesion" content="Oscar Unzueta ver2.1">
   <meta name="disclaimer" content="Esta herramienta no almacena datos en servidores externos y es ajena a la UOC.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Itinerario Grado en Derecho UOC</title>
-
 
   <style>
     :root {
@@ -1377,6 +1376,39 @@
       font-size: 0.82rem;
       line-height: 1;
     }
+
+    .eval-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 3px 7px;
+      font-size: 0.68rem;
+      line-height: 1;
+      font-weight: 900;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .eval-badge.ec-only {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    .eval-badge.with-pf {
+      background: #dbeafe;
+      color: #1e3a8a;
+      border-color: #93c5fd;
+    }
+
+    .eval-badge.other-eval {
+      background: #f1f5f9;
+      color: #334155;
+      border-color: #cbd5e1;
+    }
+
     .modal-wide { width: min(860px, 96vw); }
     .plan-box { display: grid; gap: 12px; margin-top: 14px; }
     .plan-box h3 { margin: 0; color: var(--azul-oscuro); }
@@ -1405,15 +1437,17 @@
     .credit-spacer { pointer-events: none; }
 
     @media (min-width: 721px) {
-      .basic-grid .subject { grid-template-columns: 14px 20px minmax(0, 1fr) 24px 52px; }
-      .basic-grid .subject .info-subject { grid-column: 4; }
-      .basic-grid .subject .grade-input { grid-column: 5; }
+      .basic-grid .subject { grid-template-columns: 14px 20px minmax(0, 1fr) auto 24px 52px; }
+      .basic-grid .subject .eval-badge { grid-column: 4; }
+      .basic-grid .subject .info-subject { grid-column: 5; }
+      .basic-grid .subject .grade-input { grid-column: 6; }
     }
 
-    .optional-card .subject { grid-template-columns: 14px 20px minmax(0, 1fr) 23px 24px 50px !important; }
-    .optional-card .subject .credits { grid-column: 4 !important; }
-    .optional-card .subject .info-subject { grid-column: 5 !important; }
-    .optional-card .subject .grade-input { grid-column: 6 !important; }
+    .optional-card .subject { grid-template-columns: 14px 20px minmax(0, 1fr) auto 23px 24px 50px !important; }
+    .optional-card .subject .eval-badge { grid-column: 4 !important; }
+    .optional-card .subject .credits { grid-column: 5 !important; }
+    .optional-card .subject .info-subject { grid-column: 6 !important; }
+    .optional-card .subject .grade-input { grid-column: 7 !important; }
 
     @media (max-width: 720px) {
       #selectorOptativas option[data-color="publico"] { background: #eff6ff; color: #1d4ed8; }
@@ -1423,7 +1457,7 @@
       #selectorOptativas option[data-color="minor"] { background: #f0fdf4; color: #15803d; }
       .subject .credits { width: 22px !important; height: 22px !important; font-size: 0.68rem !important; flex-basis: 22px !important; }
       .info-subject { width: 23px; height: 23px; min-width: 23px; }
-      .optional-card .subject { grid-template-columns: 14px 22px minmax(0, 1fr) 22px 23px 44px !important; }
+      .optional-card .subject { grid-template-columns: 14px 22px minmax(0, 1fr) auto 22px 23px 44px !important; }
     }
 
     @media print { #approvedModal, #planModal { display: none !important; } }
@@ -1432,7 +1466,7 @@
     @media (min-width: 721px) {
       .area .subject {
         display: grid;
-        grid-template-columns: 14px 20px minmax(0, 1fr) 24px 52px;
+        grid-template-columns: 14px 20px minmax(0, 1fr) auto 24px 52px;
         grid-template-rows: auto auto;
         align-items: center;
         gap: 7px 8px;
@@ -1453,8 +1487,9 @@
       .area .subject .req-dot { grid-column: 1; grid-row: 2; }
       .area .subject input[type="checkbox"] { grid-column: 2; grid-row: 2; }
       .area .subject .credits { grid-column: 3; grid-row: 2; justify-self: end; margin-left: 0; }
-      .area .subject .info-subject { grid-column: 4; grid-row: 2; }
-      .area .subject .grade-input { grid-column: 5; grid-row: 2; }
+      .area .subject .eval-badge { grid-column: 4; grid-row: 2; justify-self: center; }
+      .area .subject .info-subject { grid-column: 5; grid-row: 2; }
+      .area .subject .grade-input { grid-column: 6; grid-row: 2; }
     }
 
     .optional-ambitos {
@@ -1593,6 +1628,51 @@
       .semester-visual { grid-template-columns: repeat(2, 1fr); }
     }
 
+
+    /* Ajustes v12: básicas más legibles y notas suspensas en rojo */
+    .grade-input.low-grade {
+      color: #b91c1c !important;
+      border-color: #fca5a5 !important;
+      background: #fef2f2 !important;
+      font-weight: 900 !important;
+    }
+
+    .nota-suspensa {
+      color: #b91c1c !important;
+      font-weight: 900;
+    }
+
+    @media (min-width: 721px) {
+      .basic-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+      }
+
+      .basic-grid .subject {
+        display: grid !important;
+        grid-template-columns: 14px 20px minmax(0, 1fr) auto 23px 24px 52px !important;
+        grid-template-rows: auto auto !important;
+        gap: 7px 8px !important;
+        align-items: center !important;
+        min-height: 76px !important;
+        padding: 10px 12px !important;
+      }
+
+      .basic-grid .subject .name {
+        grid-column: 1 / -1 !important;
+        grid-row: 1 !important;
+        font-size: 0.98rem !important;
+        line-height: 1.16 !important;
+        overflow-wrap: anywhere !important;
+      }
+
+      .basic-grid .subject .req-dot { grid-column: 1 !important; grid-row: 2 !important; }
+      .basic-grid .subject input[type="checkbox"] { grid-column: 2 !important; grid-row: 2 !important; }
+      .basic-grid .subject .eval-badge { grid-column: 4 !important; grid-row: 2 !important; justify-self: end !important; }
+      .basic-grid .subject .credits { grid-column: 5 !important; grid-row: 2 !important; justify-self: center !important; margin-left: 0 !important; }
+      .basic-grid .subject .info-subject { grid-column: 6 !important; grid-row: 2 !important; }
+      .basic-grid .subject .grade-input { grid-column: 7 !important; grid-row: 2 !important; }
+    }
+
   </style>
 </head>
 
@@ -1656,7 +1736,7 @@
     <div id="approvedModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="approvedTitle">
       <div class="modal modal-wide">
         <header>
-          <h2 id="approvedTitle">Asignaturas aprobadas</h2>
+          <h2 id="approvedTitle">Asignaturas aprobadas con nota</h2>
           <button id="closeApproved" class="modal-close" aria-label="Cerrar">✕</button>
         </header>
         <div id="approvedContent"></div>
@@ -1674,17 +1754,17 @@
     </div>
 
     <section class="section" data-section="basic">
-      <h2 class="section-title" style="color: var(--azul);">Formación básica · 60 créditos · 10 asignaturas</h2>
+      <h2 class="section-title" style="color: var(--azul);">Formación básica · 60 créditos</h2>
       <div class="basic-grid" id="basic"></div>
     </section>
 
     <section class="section" data-section="mandatory">
-      <h2 class="section-title" style="color: var(--rojo);">Obligatorias · 146 créditos · 27 asignaturas</h2>
+      <h2 class="section-title" style="color: var(--rojo);">Obligatorias · 146 créditos</h2>
       <div class="areas" id="mandatory"></div>
     </section>
 
     <section class="section" data-section="optional">
-      <h2 class="section-title" style="color: var(--verde);">Optativas  · 28 créditos . 7 asignaturas aprox</h2>
+      <h2 class="section-title" style="color: var(--verde);">Optativas  · 28 créditos</h2>
       <div class="optional-selector-box">
         <div class="selector-meta">
           <span>Elige hasta 7 optativas desde el listado</span>
@@ -2463,7 +2543,7 @@
     const data = {
       basic: [["Fundamentos históricos del Derecho",6],["Teoría general del Derecho",6],["Política y sociedad",6],["Introducción a la economía",6],["Técnicas de expresión, argumentación y negociación",6],["Uso y aplicación de las TIC",6],["Idioma moderno I: Inglés / Francés",6],["Idioma moderno II: Inglés / Francés",6],["Derecho civil I",6],["Sistema constitucional español",6]],
       mandatory: [
-        { title:"Público y constitucional", className:"publico", items:[["Derecho administrativo I",6],["Derecho administrativo II",6],["Derecho internacional público",6],["Derechos humanos",4],["Derecho del medio ambiente",4],["Introducción al derecho de la Unión Europea",4],["Derecho de internet",6]] },
+        { title:"Público y constitucional", className:"publico", items:[["Derecho administrativo I",6],["Derecho administrativo II",6],["Derecho internacional público",6],["Derechos humanos",4],["Introducción al derecho de la Unión Europea",4],["Derecho del medio ambiente",4],["Derecho de internet",6]] },
         { title:"Civil y patrimonial", className:"civil", items:[["Derecho civil II",6],["Derecho civil III",6],["Derecho civil IV",6],["Derecho de daños",4],["Derecho internacional privado",6]] },
         { title:"Mercantil y empresa", className:"empresa", items:[["Derecho mercantil I",6],["Derecho mercantil II",6],["Derecho del trabajo individual",6],["Derecho sindical",4]] },
         { title:"Penal y procesal", className:"penal", items:[["Derecho penal I",6],["Derecho penal II",6],["Derecho penal III (económico)",4],["Derecho procesal civil I",6],["Derecho procesal civil II",4],["Derecho procesal penal",6]] },
@@ -2490,9 +2570,31 @@
     function planDocenteUrl(codigo) {
       return codigo ? `https://apps.uoc.edu/PlaDocent/PlaDocent?Semestre=20261&SignatureCode=${encodeURIComponent(codigo)}&Context=2&Locale=es` : "";
     }
+    function modeloEvaluacionFor(name) {
+      const plan = planFor(name);
+      return plan?.modelo_evaluacion || "";
+    }
+    function claseModeloEvaluacion(modelo) {
+      const valor = normalizar(modelo);
+      if (!valor) return "other-eval";
+      if (valor.includes("pf") || valor.includes("ps")) return "with-pf";
+      if (valor.includes("ec")) return "ec-only";
+      return "other-eval";
+    }
+
     function escapeHtml(texto) {
       return String(texto).replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
     }
+    function esNotaSuspensa(valor) {
+      if (valor === undefined || valor === null || valor === "") return false;
+      const numero = Number(valor);
+      return !Number.isNaN(numero) && numero < 5;
+    }
+
+    function actualizarClaseNota(input) {
+      input.classList.toggle("low-grade", esNotaSuspensa(input.value));
+    }
+
     function allSelectedSubjects() { return [...document.querySelectorAll(".subject")]; }
     function isCompletedName(name) { const target = normalizar(name); return allSelectedSubjects().some(el => el.classList.contains("done") && normalizar(el.dataset.originalName || el.dataset.name) === target); }
     function saveProgress() {
@@ -2637,6 +2739,15 @@
 
       label.append(input, span);
 
+      const modeloEvaluacion = modeloEvaluacionFor(name);
+      if (modeloEvaluacion) {
+        const evalBadge = document.createElement("span");
+        evalBadge.className = `eval-badge ${claseModeloEvaluacion(modeloEvaluacion)}`;
+        evalBadge.textContent = modeloEvaluacion;
+        evalBadge.title = `Modelo de evaluación: ${modeloEvaluacion}`;
+        label.appendChild(evalBadge);
+      }
+
       if (credits === 4) {
         const badge = document.createElement("span");
         badge.className = "credits";
@@ -2671,12 +2782,14 @@
       nota.step = "0.1";
       nota.placeholder = "Nota";
       nota.value = notas[id] ?? "";
+      actualizarClaseNota(nota);
       nota.title = "Nota de 0 a 10";
       nota.addEventListener("click", e => e.stopPropagation());
       nota.addEventListener("change", () => {
         if (nota.value === "") delete notas[id];
         else notas[id] = Math.max(0, Math.min(10, Number(nota.value)));
         nota.value = notas[id] ?? "";
+        actualizarClaseNota(nota);
         saveNotas();
       });
       label.appendChild(nota);
@@ -2887,7 +3000,7 @@
     function semestreEstimadoPorCreditos(creditosAprobados) {
       if (creditosAprobados >= 240) return { semestre: 8, texto: "Grado completado" };
       const semestre = Math.min(8, Math.max(1, Math.floor(creditosAprobados / 30) + 1));
-      return { semestre, texto: `${semestre}.º semestre` };
+      return { semestre, texto: `${semestre}.º semestre estimado` };
     }
 
     function renderSemesterVisual(semestreActual, creditosAprobados) {
@@ -2920,7 +3033,8 @@
       const rows = aprobadas.map(el => {
         const id = el.dataset.id;
         const nota = notas[id] === undefined || notas[id] === "" ? "—" : notas[id];
-        return `<tr><td>${escapeHtml(el.dataset.originalName)}</td><td>${escapeHtml(tipoAsignaturaParaResumen(el))}</td><td>${el.dataset.credits}</td><td>${nota}</td></tr>`;
+        const claseNota = esNotaSuspensa(nota) ? ' class="nota-suspensa"' : "";
+        return `<tr><td>${escapeHtml(el.dataset.originalName)}</td><td>${escapeHtml(tipoAsignaturaParaResumen(el))}</td><td>${el.dataset.credits}</td><td${claseNota}>${nota}</td></tr>`;
       }).join("");
       document.getElementById("approvedContent").innerHTML = `
         <div class="approved-overview">
@@ -3043,7 +3157,8 @@
       const rows = aprobadas.map(el => {
         const id = el.dataset.id;
         const nota = notas[id] === undefined || notas[id] === "" ? "—" : notas[id];
-        return `<tr><td>${el.dataset.originalName}</td><td>${tipoAsignaturaParaResumen(el)}</td><td>${el.dataset.credits}</td><td>${nota}</td></tr>`;
+        const claseNota = esNotaSuspensa(nota) ? ' class="nota-suspensa"' : "";
+        return `<tr><td>${el.dataset.originalName}</td><td>${tipoAsignaturaParaResumen(el)}</td><td>${el.dataset.credits}</td><td${claseNota}>${nota}</td></tr>`;
       }).join("");
       page.innerHTML = `
         <h2 class="print-approved-title">Asignaturas aprobadas y nota</h2>
@@ -3086,4 +3201,5 @@
 
 </body>
 </html>
+
 
